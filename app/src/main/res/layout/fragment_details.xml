@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.mk.countries.viewmodel.DetailsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        tools:context=".view.fragments.HomeFragment">
+        <!--weather-->
+        <ImageView
+            android:id="@+id/weather"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/left_round_corner"
+            android:src="@color/light_blue"
+            app:layout_constraintEnd_toStartOf="@+id/current_city_tv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <TextView
+            android:id="@+id/current_city_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="#e0e0e0"
+            android:gravity="center"
+            android:text="Mumbai"
+
+            app:layout_constraintBottom_toBottomOf="@+id/weather"
+            app:layout_constraintEnd_toStartOf="@+id/air_quality_tv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/weather"
+            app:layout_constraintTop_toTopOf="@+id/weather" />
+
+        <TextView
+            android:id="@+id/air_quality_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/right_round_corner"
+            android:gravity="center"
+            android:text="air quality 123 %"
+            app:layout_constraintBottom_toBottomOf="@+id/current_city_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/current_city_tv"
+            app:layout_constraintTop_toTopOf="@+id/current_city_tv" />
+
+
+        <ImageView
+            android:id="@+id/country_flag_iv"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.409"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/current_city_tv"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/country_name_tv"
+            style="@style/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="India"
+            app:layout_constraintEnd_toEndOf="@+id/country_flag_iv"
+            app:layout_constraintStart_toStartOf="@+id/country_flag_iv"
+            app:layout_constraintTop_toBottomOf="@+id/country_flag_iv" />
+
+
+        <TextView
+            android:id="@+id/capital_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:text="Capital city"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/country_flag_iv" />
+
+        <TextView
+            android:id="@+id/capital_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Delhi"
+            app:layout_constraintBottom_toBottomOf="@+id/capital_title_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/capital_title_tv" />
+
+        <TextView
+            android:id="@+id/top_level_domain_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/top_level_domains"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/capital_title_tv" />
+
+        <TextView
+            android:id="@+id/top_level_domain_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=".in"
+            app:layout_constraintBottom_toBottomOf="@+id/top_level_domain_title_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/top_level_domain_title_tv" />
+
+        <TextView
+            android:id="@+id/calling_codes_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Calling codes"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top_level_domain_title_tv" />
+
+        <TextView
+            android:id="@+id/calling_codes_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="+91"
+            app:layout_constraintBottom_toBottomOf="@+id/calling_codes_title_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/calling_codes_title_tv" />
+
+        <TextView
+            android:id="@+id/time_zone_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Time zone"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calling_codes_title_tv" />
+
+        <TextView
+            android:id="@+id/time_zone_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="UTC +8.00"
+            app:layout_constraintBottom_toBottomOf="@+id/time_zone_title_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/time_zone_title_tv" />
+
+        <TextView
+            android:id="@+id/independent_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Independent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/time_zone_title_tv" />
+
+        <TextView
+            android:id="@+id/independent_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Yes"
+            app:layout_constraintBottom_toBottomOf="@+id/independent_title_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/independent_title_tv" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_begin="170dp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
