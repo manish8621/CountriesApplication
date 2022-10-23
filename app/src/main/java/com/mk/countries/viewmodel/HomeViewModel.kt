@@ -1,6 +1,7 @@
 package com.mk.countries.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -22,26 +23,26 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            refreshCountriesList()
+            refreshCountriesList("all")
         }
     }
-    suspend fun refreshCountriesList()
+
+    fun searchInList(filter:String){
+        if(filter.isEmpty()) return
+        viewModelScope.launch {
+            refreshCountriesList(filter)
+        }
+    }
+
+    //by default show all countries without filter
+    private suspend fun refreshCountriesList(filter:String)
     {
 
             withContext(Dispatchers.IO)
             {
-                repository.refreshList()
+                repository.refreshList(filter)
+                Log.i("TAG","inside search")
             }
     }
 
-//    private fun refreshList() {
-//        viewModelScope.launch {
-//                try {
-//                    val result = Network.countriesApiService.getCountriesList().await()
-//                    if(result.isNotEmpty()) countryItemsList.value = result
-//                } catch (e: HttpException) {
-//                    return@launch
-//                }
-//        }
-//    }
 }

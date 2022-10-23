@@ -19,9 +19,14 @@ class NetworkModels {
         @Json(name="timezones") val timezones : List<String>,
         @Json(name="currencies") val currencies : List<Currencies> = listOf(),
         @Json(name="languages") val languages : List<Languages> = listOf(),
-        @Json(name="flag") val flag : String,
+        @Json(name="flags") val flag : Flag,
         @Json(name="independent") val independent : Boolean
     )
+    @JsonClass(generateAdapter = true)
+    data class Flag(
+        val png:String
+    )
+
     @JsonClass(generateAdapter = true)
     data class Currencies (
 
@@ -55,7 +60,7 @@ fun List<NetworkModels.CountryItem>.asDatabaseModels():Array<DatabaseEntities.Co
             timezones = it.timezones.toString(),
             currencies = it.currencies.map{currency -> currency.name.filterExtraChars()},
             languages = it.languages.map {language ->language.name.filterExtraChars()},
-            flag = it.flag,
+            flag = it.flag.png,
             independent = it.independent
         )
     }.toTypedArray()

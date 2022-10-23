@@ -11,8 +11,14 @@ interface CountryDao{
     @Query("SELECT * FROM countries_table")
     fun getCountriesList(): LiveData<List<DatabaseEntities.CountryItem>>
 
-    @Insert
+    @Query("SELECT * FROM countries_table where name like '%' || :country || '%' ")
+    fun search(country:String): LiveData<List<DatabaseEntities.CountryItem>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg countryItem: CountryItem)
+
+    @Query("DELETE from countries_table")
+    fun deleteAll()
 }
 
 @Database(entities = [CountryItem::class], version = 1, exportSchema = false)

@@ -6,12 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.mk.countries.R
-import com.mk.countries.databinding.FragmentDetailsBinding
 import com.mk.countries.databinding.FragmentHomeBinding
-import com.mk.countries.viewmodel.DetailsViewModel
+import com.mk.countries.view.adapter.CountriesViewAdapter
 import com.mk.countries.viewmodel.HomeViewModel
 import com.mk.countries.viewmodel.HomeViewModelFactory
 
@@ -24,7 +21,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater,container,false)
 
 
@@ -35,22 +32,30 @@ class HomeFragment : Fragment() {
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+        binding.searchBtn.setOnClickListener {
 
-        viewModel.countryItemsList.observe(viewLifecycleOwner,Observer{
-            Toast.makeText(activity, it.toString() , Toast.LENGTH_SHORT).show()
-        })
-        setOnClickListeners()
+        }
+        val recyclerViewAdapter = CountriesViewAdapter().also {
+            it.setOnclickListener{ countryItem->
+                Toast.makeText(activity, countryItem.name, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        //setOnClickListeners
+        binding.searchBtn.setOnClickListener {
+            viewModel.searchInList(binding.searchEt.text.toString())
+        }
+
+        binding.recyclerView.adapter = recyclerViewAdapter
+
+        //setObservers
+        viewModel.countryItemsList.observe(viewLifecycleOwner) {
+            recyclerViewAdapter.submitList(it)
+        }
+
         return binding.root
     }
 
-    private fun setOnClickListeners() {
-        binding.searchBtn.setOnClickListener{
-            Toast.makeText(
-                activity,
-                viewModel.countryItemsList.value?.get(0)?.currencies?.get(0),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
+
 
 }

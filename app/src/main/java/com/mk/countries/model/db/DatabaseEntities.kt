@@ -37,7 +37,7 @@ class ListConverter{
     {
         val listType = object : TypeToken<List<String>>() {}.type
         //handle empty lists
-        Log.e("TAG",value?:"null")
+//        Log.e("TAG",value?:"null")
         return if (value == null || value.length<=2) listOf<String>() else Gson().fromJson(value,listType)
     }
     @TypeConverter

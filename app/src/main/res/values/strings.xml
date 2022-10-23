@@ -6,4 +6,5 @@
     <string name="top_level_domains">Top level domains</string>
     <string name="flag_image">flag image</string>
     <string name="weather_image">weather image</string>
+    <string name="all">all</string>
 </resources>

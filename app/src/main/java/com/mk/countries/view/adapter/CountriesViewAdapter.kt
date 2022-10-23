@@ -10,18 +10,19 @@ import com.mk.countries.model.domain.DomainModels.*
 
 class CountriesViewAdapter:ListAdapter<CountryItem,CountriesViewAdapter.ItemViewHolder>(DiffUtilCallBack()){
 
-
-    var clickListener:ClickListener?=null
+    //lambda
+    private var clickListener:((countryItem:CountryItem)->Unit)? = null
 
     //viewHolder
     class ItemViewHolder private constructor(private val binding:CountryListItemBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(countryItem:CountryItem,clickListener: ClickListener?)
+        fun bind(countryItem:CountryItem,clickListener:((countryItem:CountryItem)->Unit)?)
         {
             binding.countryItem = countryItem
+
             //if clicklistener is not null
             clickListener?.let {
                 binding.root.setOnClickListener{
-                    clickListener.onclickListener(countryItem.name)
+                        clickListener.invoke(countryItem)
                 }
             }
 
@@ -38,15 +39,11 @@ class CountriesViewAdapter:ListAdapter<CountryItem,CountriesViewAdapter.ItemView
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.bind(getItem(position),clickListener)
 
-    fun setOnclickListener(clickListener: ClickListener){
+    fun setOnclickListener(clickListener:((countryItem:CountryItem)->Unit)){
         this.clickListener = clickListener
     }
 }
 class DiffUtilCallBack:DiffUtil.ItemCallback<CountryItem>(){
     override fun areItemsTheSame(oldItem: CountryItem, newItem: CountryItem): Boolean = oldItem.name==newItem.name
     override fun areContentsTheSame(oldItem: CountryItem, newItem: CountryItem): Boolean = oldItem==newItem
-}
-interface ClickListener
-{
-    val onclickListener:(name:String)->Unit
 }

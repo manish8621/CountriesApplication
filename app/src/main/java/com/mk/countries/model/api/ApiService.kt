@@ -8,6 +8,7 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 private const val BASE_URL = "https://restcountries.com/"
 
@@ -15,6 +16,8 @@ private const val BASE_URL = "https://restcountries.com/"
 interface CountryApiService {
     @GET("v2/all")
     fun getCountriesList():Deferred<List<NetworkModels.CountryItem>>
+    @GET("v2/name/{filter}")
+    fun searchCountries(@Path("filter")filter: String): Deferred<List<NetworkModels.CountryItem>>
 }
 
 private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()

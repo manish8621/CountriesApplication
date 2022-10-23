@@ -33,7 +33,8 @@
             app:layout_constraintEnd_toStartOf="@id/search_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:autofillHints="all,India" />
+            android:text="@string/all"
+            android:autofillHints="all,india" />
 
         <Button
             android:id="@+id/search_btn"
