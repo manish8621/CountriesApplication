@@ -4,4 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search">Search</string>
     <string name="top_level_domains">Top level domains</string>
+    <string name="flag_image">flag image</string>
+    <string name="weather_image">weather image</string>
 </resources>

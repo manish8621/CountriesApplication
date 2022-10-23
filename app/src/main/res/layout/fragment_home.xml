@@ -32,7 +32,8 @@
             android:paddingBottom="5dp"
             app:layout_constraintEnd_toStartOf="@id/search_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:autofillHints="all,India" />
 
         <Button
             android:id="@+id/search_btn"
@@ -60,7 +61,8 @@
             app:layout_constraintEnd_toStartOf="@+id/current_city_tv"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_et" />
+            app:layout_constraintTop_toBottomOf="@+id/search_et"
+            android:contentDescription="@string/weather_image" />
 
         <TextView
             android:id="@+id/current_city_tv"
