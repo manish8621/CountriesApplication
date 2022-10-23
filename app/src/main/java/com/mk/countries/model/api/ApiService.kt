@@ -14,7 +14,7 @@ private const val BASE_URL = "https://restcountries.com/"
 
 interface CountryApiService {
     @GET("v2/all")
-    fun getCountriesList():Deferred<List<CountryItem>>
+    fun getCountriesList():Deferred<List<NetworkModels.CountryItem>>
 }
 
 private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()

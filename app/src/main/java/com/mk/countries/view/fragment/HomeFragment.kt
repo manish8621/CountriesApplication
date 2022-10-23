@@ -39,9 +39,18 @@ class HomeFragment : Fragment() {
         viewModel.countryItemsList.observe(viewLifecycleOwner,Observer{
             Toast.makeText(activity, it.toString() , Toast.LENGTH_SHORT).show()
         })
-
-
+        setOnClickListeners()
         return binding.root
+    }
+
+    private fun setOnClickListeners() {
+        binding.searchBtn.setOnClickListener{
+            Toast.makeText(
+                activity,
+                viewModel.countryItemsList.value?.get(0)?.languages?.get(0),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
 }
