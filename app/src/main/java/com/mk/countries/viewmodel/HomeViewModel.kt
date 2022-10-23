@@ -23,24 +23,27 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            refreshCountriesList("all")
+            refreshCountriesList()
         }
     }
 
     fun searchInList(filter:String){
         if(filter.isEmpty()) return
         viewModelScope.launch {
-            refreshCountriesList(filter)
+            if(filter.lowercase() == "all")
+                refreshCountriesList()
+            else
+                repository.filterList(filter)
         }
     }
 
     //by default show all countries without filter
-    private suspend fun refreshCountriesList(filter:String)
+    private suspend fun refreshCountriesList()
     {
 
             withContext(Dispatchers.IO)
             {
-                repository.refreshList(filter)
+                repository.refreshRepository()
                 Log.i("TAG","inside search")
             }
     }

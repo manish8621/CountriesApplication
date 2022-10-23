@@ -9,10 +9,10 @@ import com.mk.countries.model.db.DatabaseEntities.*
 @Dao
 interface CountryDao{
     @Query("SELECT * FROM countries_table")
-    fun getCountriesList(): LiveData<List<DatabaseEntities.CountryItem>>
+    fun getCountriesList(): List<DatabaseEntities.CountryItem>
 
     @Query("SELECT * FROM countries_table where name like '%' || :country || '%' ")
-    fun search(country:String): LiveData<List<DatabaseEntities.CountryItem>>
+    fun search(country:String): List<DatabaseEntities.CountryItem>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg countryItem: CountryItem)
