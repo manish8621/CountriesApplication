@@ -64,7 +64,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.409"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/current_city_tv"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="India"
+            android:text="@{viewModel.countryDetails.name}"
             app:layout_constraintEnd_toEndOf="@+id/country_flag_iv"
             app:layout_constraintStart_toStartOf="@+id/country_flag_iv"
             app:layout_constraintTop_toBottomOf="@+id/country_flag_iv" />
@@ -197,7 +197,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintGuide_begin="170dp"
+            app:layout_constraintGuide_begin="205dp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.mk.countries.databinding.FragmentHomeBinding
 import com.mk.countries.view.adapter.CountriesViewAdapter
 import com.mk.countries.viewmodel.HomeViewModel
@@ -37,7 +38,8 @@ class HomeFragment : Fragment() {
         }
         val recyclerViewAdapter = CountriesViewAdapter().also {
             it.setOnclickListener{ countryItem->
-                Toast.makeText(activity, countryItem.name, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(activity, countryItem.name, Toast.LENGTH_SHORT).show()
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(countryItem.id))
             }
         }
 

@@ -9,12 +9,10 @@ import com.mk.countries.model.api.NetworkModels
 import com.mk.countries.model.api.asDatabaseModels
 import com.mk.countries.model.db.CountryDatabase
 import com.mk.countries.model.db.DatabaseEntities
+import com.mk.countries.model.db.asDomainModel
 import com.mk.countries.model.db.asDomainModels
 import com.mk.countries.model.domain.DomainModels
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import retrofit2.HttpException
 import java.util.*
 
@@ -49,6 +47,12 @@ class Repository(private val database:CountryDatabase) {
             catch (e:Exception){
                 Log.e("TAG",(e.message?:" error "))
             }
+        }
+    }
+    suspend fun getCountryItemById(id:Long):Deferred<DomainModels.CountryItem>
+    {
+        return CoroutineScope(Dispatchers.IO).async{
+            database.countryDao.getCountry(id).asDomainModel()
         }
     }
 }

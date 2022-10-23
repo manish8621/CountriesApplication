@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 
 class DomainModels {
     data class CountryItem (
+        val id:Long,
         val name : String,
         val callingCodes : String,
         val capital : String,

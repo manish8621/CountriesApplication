@@ -11,6 +11,9 @@ interface CountryDao{
     @Query("SELECT * FROM countries_table")
     fun getCountriesList(): List<DatabaseEntities.CountryItem>
 
+    @Query("SELECT * FROM countries_table where id = :id")
+    fun getCountry(id:Long): DatabaseEntities.CountryItem
+
     @Query("SELECT * FROM countries_table where name like '%' || :country || '%' ")
     fun search(country:String): List<DatabaseEntities.CountryItem>
 
@@ -21,7 +24,7 @@ interface CountryDao{
     fun deleteAll()
 }
 
-@Database(entities = [CountryItem::class], version = 1, exportSchema = false)
+@Database(entities = [CountryItem::class], version = 2, exportSchema = false)
 @TypeConverters(ListConverter::class)
 abstract class CountryDatabase:RoomDatabase()
 {

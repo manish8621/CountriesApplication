@@ -14,7 +14,8 @@ import com.mk.countries.model.domain.DomainModels
 class DatabaseEntities {
     @Entity(tableName = "countries_table")
     data class CountryItem (
-        @PrimaryKey
+        @PrimaryKey(autoGenerate = true)
+        val id:Long=0L,
         val name : String,
         @ColumnInfo(name="calling_codes")
         val callingCodes : String,
@@ -52,6 +53,7 @@ fun List<DatabaseEntities.CountryItem>.asDomainModels():List<DomainModels.Countr
     return map {
 
         DomainModels.CountryItem(
+            id=it.id,
             name = it.name,
             callingCodes = it.callingCodes,
             capital = it.capital,
@@ -65,4 +67,20 @@ fun List<DatabaseEntities.CountryItem>.asDomainModels():List<DomainModels.Countr
             independent = it.independent
         )
     }
+}
+fun DatabaseEntities.CountryItem.asDomainModel():DomainModels.CountryItem{
+    return DomainModels.CountryItem(
+        id=this.id,
+        name = this.name,
+        callingCodes = this.callingCodes,
+        capital = this.capital,
+        region = this.region,
+        population =this.population,
+        latitudeLongitude = this.lattitudeLongitude,
+        timezones = this.timezones,
+        currencies = this.currencies.toString(),
+        languages = this.languages.toString(),
+        flag = this.flag ,
+        independent = this.independent
+    )
 }

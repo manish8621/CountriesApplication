@@ -44,6 +44,6 @@ class CountriesViewAdapter:ListAdapter<CountryItem,CountriesViewAdapter.ItemView
     }
 }
 class DiffUtilCallBack:DiffUtil.ItemCallback<CountryItem>(){
-    override fun areItemsTheSame(oldItem: CountryItem, newItem: CountryItem): Boolean = oldItem.name==newItem.name
+    override fun areItemsTheSame(oldItem: CountryItem, newItem: CountryItem): Boolean = oldItem.id==newItem.id
     override fun areContentsTheSame(oldItem: CountryItem, newItem: CountryItem): Boolean = oldItem==newItem
 }
