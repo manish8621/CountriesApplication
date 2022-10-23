@@ -7,14 +7,14 @@ import androidx.room.PrimaryKey
 class DomainModels {
     data class CountryItem (
         val name : String,
-        val callingCodes : List<String>,
-        val capital : String ,
+        val callingCodes : String,
+        val capital : String,
         val region : String,
         val population : Int,
         val latitudeLongitude : String,
-        val timezones : List<String>,
-        val currencies : List<String> = listOf(),
-        val languages : List<String> = listOf(),
+        val timezones : String,
+        val currencies : String,
+        val languages : String,
         val flag : String,
         val independent : Boolean
     )

@@ -34,8 +34,12 @@ class NetworkModels {
         @Json(name="name") val name : String
     )
 }
-
-
+//to remove the brackets in string
+//it will throw MalformedJsonException while parsing string to array
+fun String.filterExtraChars():String{
+    val replaceWith = '_'
+    return filter { c-> c!='('&&c!=')'&&c!='['&&c!=']'&&c!=',' }.replace(' ',replaceWith)
+}
 
 fun List<NetworkModels.CountryItem>.asDatabaseModels():Array<DatabaseEntities.CountryItem>
 {
@@ -49,8 +53,8 @@ fun List<NetworkModels.CountryItem>.asDatabaseModels():Array<DatabaseEntities.Co
             population =it.population,
             lattitudeLongitude = it.latlng.toString(),
             timezones = it.timezones.toString(),
-            currencies = it.currencies.toString(),
-            languages = it.languages.map { language ->language.name.filter { c-> c!='('&&c!=')'&&c!='['&&c!=']'&&c!=' ' } },
+            currencies = it.currencies.map{currency -> currency.name.filterExtraChars()},
+            languages = it.languages.map {language ->language.name.filterExtraChars()},
             flag = it.flag,
             independent = it.independent
         )

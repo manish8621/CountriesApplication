@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
         binding.searchBtn.setOnClickListener{
             Toast.makeText(
                 activity,
-                viewModel.countryItemsList.value?.get(0)?.languages?.get(0),
+                viewModel.countryItemsList.value?.get(0)?.currencies?.get(0),
                 Toast.LENGTH_SHORT
             ).show()
         }

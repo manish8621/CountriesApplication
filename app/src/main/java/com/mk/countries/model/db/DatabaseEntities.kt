@@ -24,7 +24,7 @@ class DatabaseEntities {
         @ColumnInfo(name="latitude_longitude")
         val lattitudeLongitude : String,
         val timezones : String,
-        val currencies : String,
+        val currencies : List<String>,
         val languages : List<String>,
         val flag : String,
         val independent : Boolean
@@ -47,25 +47,22 @@ class ListConverter{
 }
 
 
-//fun List<DatabaseEntities.CountryItem>.asDomainModels():List<DomainModels.CountryItem>
-//{
-//    return map {
-//
-//        var callingCodes= arrayListOf<String>()
-//        it.callingCodes.reg
-//        callingCodes.add()
-//        DomainModels.CountryItem(
-//            name = it.name,
-//            callingCodes = it.callingCodes.toString(),
-//            capital = it.capital,
-//            region = it.region,
-//            population =it.population,
-//            lattitudeLongitude = it.latlng.toString(),
-//            timezones = it.timezones.toString(),
-//            currencies = it.toString(),
-//            languages = it.languages.toString(),
-//            flag = it.flag,
-//            independent = it.independent
-//        )
-//    }
-//}
+fun List<DatabaseEntities.CountryItem>.asDomainModels():List<DomainModels.CountryItem>
+{
+    return map {
+
+        DomainModels.CountryItem(
+            name = it.name,
+            callingCodes = it.callingCodes,
+            capital = it.capital,
+            region = it.region,
+            population =it.population,
+            latitudeLongitude = it.lattitudeLongitude,
+            timezones = it.timezones,
+            currencies = it.currencies.toString(),
+            languages = it.languages.toString(),
+            flag = it.flag ,
+            independent = it.independent
+        )
+    }
+}
