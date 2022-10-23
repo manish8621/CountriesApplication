@@ -25,13 +25,13 @@ class Repository(private val database:CountryDatabase) {
     }
 
     init {
-        CoroutineScope(Dispatchers.IO).launch{
             refreshList()
-        }
     }
 
-    private fun refreshList(){
-        _countries.postValue(database.countryDao.getCountriesList())
+    fun refreshList(){
+        CoroutineScope(Dispatchers.IO).launch {
+            _countries.postValue(database.countryDao.getCountriesList())
+        }
     }
     fun filterList(filter:String){
         CoroutineScope(Dispatchers.IO).launch {

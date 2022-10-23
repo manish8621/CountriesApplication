@@ -50,9 +50,10 @@ class HomeFragment : Fragment() {
 
         //setObservers
         viewModel.countryItemsList.observe(viewLifecycleOwner) {
+            if(it.isEmpty()) {
+                Toast.makeText(activity, "no result found", Toast.LENGTH_LONG).show()}
             recyclerViewAdapter.submitList(it)
         }
-
         return binding.root
     }
 
