@@ -1,8 +1,5 @@
 package com.mk.countries.model.domain
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 
 class DomainModels {
     data class CountryItem (
@@ -17,6 +14,6 @@ class DomainModels {
         val currencies : String,
         val languages : String,
         val flag : String,
-        val independent : Boolean
+        val independent : String
     )
 }

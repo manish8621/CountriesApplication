@@ -12,7 +12,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         tools:context=".view.fragments.HomeFragment">
 
         <EditText
@@ -21,33 +23,33 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="16dp"
+            android:autofillHints="all,india"
             android:background="@drawable/edit_text_background"
             android:fontFamily="@font/roboto_mono_medium"
-            android:hint="@string/search"
 
+            android:hint="@string/search"
             android:inputType="text"
             android:paddingStart="10dp"
             android:paddingTop="5dp"
             android:paddingEnd="10dp"
             android:paddingBottom="5dp"
-            app:layout_constraintEnd_toStartOf="@id/search_btn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:text="@string/all"
-            android:autofillHints="all,india" />
+            app:layout_constraintEnd_toStartOf="@id/search_btn"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/search_btn"
+            style="@style/titleText"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            style="@style/titleText"
             android:background="@drawable/btn_bg"
             android:fontFamily="@font/roboto_mono_medium"
 
             android:text="@string/search"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/search_et"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toEndOf="@id/search_et"
             app:layout_constraintTop_toTopOf="@+id/search_et" />
 
@@ -56,14 +58,14 @@
             android:id="@+id/weather"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/left_round_corner"
             android:layout_marginTop="16dp"
-            android:src="@color/light_blue"
+            android:background="@drawable/left_round_corner"
+            android:contentDescription="@string/weather_image"
+            android:src="@drawable/app_icon"
             app:layout_constraintEnd_toStartOf="@+id/current_city_tv"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_et"
-            android:contentDescription="@string/weather_image" />
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/search_et" />
 
         <TextView
             android:id="@+id/current_city_tv"
@@ -72,7 +74,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:background="#e0e0e0"
-            android:text="Mumbai"
+            android:text="[city]"
 
             app:layout_constraintBottom_toBottomOf="@+id/weather"
             app:layout_constraintEnd_toStartOf="@+id/air_quality_tv"
@@ -85,11 +87,11 @@
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:gravity="center"
             android:background="@drawable/right_round_corner"
+            android:gravity="center"
             android:text="air quality 123 %"
             app:layout_constraintBottom_toBottomOf="@+id/current_city_tv"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/current_city_tv"
             app:layout_constraintTop_toTopOf="@+id/current_city_tv" />
@@ -98,18 +100,28 @@
             android:id="@+id/recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-
-            android:padding="5dp"
+            android:padding="0dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current_city_tv"
-            tools:itemCount="20"
-            tools:listitem="@layout/country_list_item"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/current_city_tv"
             app:spanCount="2"
-            />
+            tools:itemCount="20"
+            tools:listitem="@layout/country_list_item" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="10dp" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="10dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

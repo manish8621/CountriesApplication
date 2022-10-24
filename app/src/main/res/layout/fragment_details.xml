@@ -19,14 +19,15 @@
             android:id="@+id/weather"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/left_round_corner"
+            android:contentDescription="@string/weather_image"
             android:src="@color/light_blue"
             app:layout_constraintEnd_toStartOf="@+id/current_city_tv"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
 
-            />
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/current_city_tv"
@@ -52,7 +53,7 @@
             android:gravity="center"
             android:text="air quality 123 %"
             app:layout_constraintBottom_toBottomOf="@+id/current_city_tv"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/current_city_tv"
             app:layout_constraintTop_toTopOf="@+id/current_city_tv" />
@@ -62,7 +63,7 @@
             android:id="@+id/country_flag_iv"
             android:layout_width="150dp"
             android:layout_height="100dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="64dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,110 +87,198 @@
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
             android:text="Capital city"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/country_flag_iv" />
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/capital_tv" />
 
         <TextView
             android:id="@+id/capital_tv"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Delhi"
-            app:layout_constraintBottom_toBottomOf="@+id/capital_title_tv"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"
+            android:text="@{viewModel.countryDetails.capital}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="@+id/capital_title_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/country_name_tv"
+            tools:text="Delhi" />
 
         <TextView
-            android:id="@+id/top_level_domain_title_tv"
+            android:id="@+id/region_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/region"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/region_tv" />
+
+        <TextView
+            android:id="@+id/region_tv"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/top_level_domains"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/capital_title_tv" />
-
-        <TextView
-            android:id="@+id/top_level_domain_tv"
-            style="@style/titleText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text=".in"
-            app:layout_constraintBottom_toBottomOf="@+id/top_level_domain_title_tv"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@{viewModel.countryDetails.region}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="@+id/top_level_domain_title_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/capital_tv"
+            tools:text="Asia" />
 
         <TextView
             android:id="@+id/calling_codes_title_tv"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="Calling codes"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/top_level_domain_title_tv" />
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/calling_codes_tv" />
 
         <TextView
             android:id="@+id/calling_codes_tv"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="+91"
-            app:layout_constraintBottom_toBottomOf="@+id/calling_codes_title_tv"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.countryDetails.callingCodes}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="@+id/calling_codes_title_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/time_zone_tv"
+            tools:text="+91" />
 
         <TextView
             android:id="@+id/time_zone_title_tv"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Time zone"
+            android:text="@string/time_zone"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calling_codes_title_tv" />
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/time_zone_tv" />
 
         <TextView
             android:id="@+id/time_zone_tv"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="UTC +8.00"
-            app:layout_constraintBottom_toBottomOf="@+id/time_zone_title_tv"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.countryDetails.timezones}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="@+id/time_zone_title_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/latitude_longitude_tv"
+            tools:text="UTC +8.00" />
 
         <TextView
             android:id="@+id/independent_title_tv"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Independent"
+            android:text="@string/independent"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/time_zone_title_tv" />
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/independent_tv" />
 
         <TextView
             android:id="@+id/independent_tv"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Yes"
-            app:layout_constraintBottom_toBottomOf="@+id/independent_title_tv"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.countryDetails.independent}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="@+id/independent_title_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/population_tv"
+            tools:text="Yes" />
+
+        <TextView
+            android:id="@+id/population_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/population"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/population_tv" />
+
+        <TextView
+            android:id="@+id/population_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{@string/population_count(viewModel.countryDetails.population)}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/languages_tv"
+            tools:text="1234" />
+
+        <TextView
+            android:id="@+id/latitude_longitude_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/latitude_longitude"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/latitude_longitude_tv" />
+
+        <TextView
+            android:id="@+id/latitude_longitude_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.countryDetails.latitudeLongitude}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/region_tv"
+            tools:text="1234" />
+
+        <TextView
+            android:id="@+id/currencies_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/currencies"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/currencies_tv" />
+
+        <TextView
+            android:id="@+id/currencies_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.countryDetails.currencies}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/calling_codes_tv"
+            tools:text="Rupee" />
+
+        <TextView
+            android:id="@+id/languages_title_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/languages"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/languages_tv" />
+
+        <TextView
+            android:id="@+id/languages_tv"
+            style="@style/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.countryDetails.languages}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/currencies_tv"
+            tools:text="Tamil" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
@@ -197,9 +286,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintGuide_begin="205dp"
+            app:layout_constraintGuide_begin="190dp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="10dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="10dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

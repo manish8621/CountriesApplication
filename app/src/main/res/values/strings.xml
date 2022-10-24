@@ -7,4 +7,12 @@
     <string name="flag_image">flag image</string>
     <string name="weather_image">weather image</string>
     <string name="all">all</string>
+    <string name="region">Region</string>
+    <string name="population_count">%d</string>
+    <string name="latitude_longitude">Latitude longitude</string>
+    <string name="currencies">Currencies</string>
+    <string name="languages">Languages</string>
+    <string name="population">Population</string>
+    <string name="time_zone">Time zone</string>
+    <string name="independent">Independent</string>
 </resources>

@@ -38,7 +38,7 @@ class ListConverter{
     {
         val listType = object : TypeToken<List<String>>() {}.type
         //handle empty lists
-//        Log.e("TAG",value?:"null")
+        //Log.e("TAG",value?:"null")
         return if (value == null || value.length<=2) listOf<String>() else Gson().fromJson(value,listType)
     }
     @TypeConverter
@@ -51,36 +51,22 @@ class ListConverter{
 fun List<DatabaseEntities.CountryItem>.asDomainModels():List<DomainModels.CountryItem>
 {
     return map {
-
-        DomainModels.CountryItem(
-            id=it.id,
-            name = it.name,
-            callingCodes = it.callingCodes,
-            capital = it.capital,
-            region = it.region,
-            population =it.population,
-            latitudeLongitude = it.lattitudeLongitude,
-            timezones = it.timezones,
-            currencies = it.currencies.toString(),
-            languages = it.languages.toString(),
-            flag = it.flag ,
-            independent = it.independent
-        )
+        it.asDomainModel()
     }
 }
 fun DatabaseEntities.CountryItem.asDomainModel():DomainModels.CountryItem{
     return DomainModels.CountryItem(
         id=this.id,
         name = this.name,
-        callingCodes = this.callingCodes,
+        callingCodes = this.callingCodes.replace(' ',',').filter { c-> c !='[' && c!=']' },
         capital = this.capital,
         region = this.region,
         population =this.population,
-        latitudeLongitude = this.lattitudeLongitude,
-        timezones = this.timezones,
-        currencies = this.currencies.toString(),
-        languages = this.languages.toString(),
+        latitudeLongitude = this.lattitudeLongitude.filter { c-> c !='[' && c!=']' },
+        timezones = this.timezones.filter { c-> c !='[' && c!=']' },
+        currencies = this.currencies.toString().filter { c-> c !='[' && c!=']' },
+        languages = this.languages.toString().filter { c-> c !='[' && c!=']' },
         flag = this.flag ,
-        independent = this.independent
+        independent = if(this.independent) "Yes" else "No"
     )
 }

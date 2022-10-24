@@ -22,7 +22,7 @@ class DetailsViewModel(id: Long,application: Application): AndroidViewModel(appl
         }
     }
     private suspend fun getCountryItem(id:Long) {
-        val countryItem = repository.getCountryItemById(id).await()
+        val countryItem = repository.getCountryItemByIdAsync(id).await()
         countryDetails.postValue(countryItem)
     }
 }

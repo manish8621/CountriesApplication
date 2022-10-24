@@ -49,7 +49,7 @@ class Repository(private val database:CountryDatabase) {
             }
         }
     }
-    suspend fun getCountryItemById(id:Long):Deferred<DomainModels.CountryItem>
+    fun getCountryItemByIdAsync(id:Long):Deferred<DomainModels.CountryItem>
     {
         return CoroutineScope(Dispatchers.IO).async{
             database.countryDao.getCountry(id).asDomainModel()
