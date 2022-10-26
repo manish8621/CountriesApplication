@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.mk.countries.R
+import com.mk.countries.model.util.LocationUtils
 
 class MainActivity : AppCompatActivity() {
+    lateinit var locationUtils: LocationUtils
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
@@ -20,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         {
             Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show()
         }
+
     }
 
     private fun checkInternet(): Boolean {

@@ -17,9 +17,8 @@ private const val REQUEST_INTERVEL = 500L
 /**
  * used to get location and its related functions
  */
-class LocationUtil(private val activity: AppCompatActivity) {
-    private val PERMISSION_ID = 1202
-
+class LocationUtils private constructor(private val activity: AppCompatActivity) {
+    val PERMISSION_ID = 1202
     private val locationManager =
         activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -28,13 +27,10 @@ class LocationUtil(private val activity: AppCompatActivity) {
 
     private var locationRequest: LocationRequest = LocationRequest.Builder(LocationRequest.PRIORITY_HIGH_ACCURACY,
         REQUEST_INTERVEL).build()
-
-
+    var isLocationRequsting = false
     lateinit var locationCallback : LocationCallback
 
-    //for permission checks
-    val isPermissionGranted: Boolean
-        get() = checkLocationPermission()
+
     val isLocationUsable: Boolean
         get() = checkLocationPermission() && checkLocationEnabled()
 
@@ -42,7 +38,7 @@ class LocationUtil(private val activity: AppCompatActivity) {
 
     }
 
-    private fun checkLocationPermission(): Boolean = (
+    fun checkLocationPermission(): Boolean = (
             ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION
@@ -53,7 +49,7 @@ class LocationUtil(private val activity: AppCompatActivity) {
                     ) == PackageManager.PERMISSION_GRANTED
             )
 
-    private fun checkLocationEnabled(): Boolean {
+    fun checkLocationEnabled(): Boolean {
 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
@@ -83,6 +79,7 @@ class LocationUtil(private val activity: AppCompatActivity) {
      *
      * */
     fun requestCurrentLocation(onSuccess: (location: Location) -> Unit) {
+        isLocationRequsting = true
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 super.onLocationResult(result)
@@ -99,6 +96,7 @@ class LocationUtil(private val activity: AppCompatActivity) {
      *
      * */
     fun startRequestingCurrentLocation(onSuccess: (location: Location) -> Unit) {
+        isLocationRequsting = true
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 super.onLocationResult(result)
@@ -113,8 +111,10 @@ class LocationUtil(private val activity: AppCompatActivity) {
      * use this function to stop requesting location
      * */
     fun stopRequestingLocation() {
-        if (::locationCallback.isInitialized)
+        if (::locationCallback.isInitialized) {
             fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+            isLocationRequsting = false
+        }
     }
     //add geocoder to convert the co ordinate to city and vice versa
 
@@ -147,6 +147,16 @@ class LocationUtil(private val activity: AppCompatActivity) {
             Log.i("TAG",e.message.toString())
         }
         return address
+    }
+    companion object{
+        private lateinit var INSTANCE:LocationUtils
+        fun getInstance(_activity:AppCompatActivity):LocationUtils{
+            if (!(::INSTANCE.isInitialized))
+            {
+                INSTANCE = LocationUtils(_activity)
+            }
+            return INSTANCE
+        }
     }
 }
 
