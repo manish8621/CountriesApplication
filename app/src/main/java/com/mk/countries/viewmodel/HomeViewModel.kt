@@ -1,10 +1,12 @@
 package com.mk.countries.viewmodel
 
 import android.app.Application
+import android.location.Address
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.mk.countries.model.api.Network
 import com.mk.countries.model.api.dataTransferObjects.CountryItem
@@ -20,15 +22,18 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     val countryItemsList = repository.countries
     val isLoading=MutableLiveData(false)
-
-    var location = MutableLiveData<Location>()
+    var address = MutableLiveData<Address>()
+    val airQualityIndex = repository.airQuality
 
     init {
         viewModelScope.launch {
             refreshCountriesList()
         }
-    }
 
+    }
+    fun getAirQuality(address: Address){
+        CoroutineScope(Dispatchers.IO).launch{ Log.i("TAG","inside viewmodel aqa lat${address.latitude}");repository.getAirQuality(address.latitude, address.longitude) }
+    }
     fun setLoadingStatus(flag:Boolean){
         isLoading.value = flag
     }

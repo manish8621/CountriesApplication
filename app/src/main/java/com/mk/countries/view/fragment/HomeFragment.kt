@@ -73,9 +73,18 @@ class HomeFragment : Fragment() {
             }
 
         }
-        viewModel.location.observe(viewLifecycleOwner,Observer{
-                Toast.makeText(activity, "lat:"+it.latitude, Toast.LENGTH_SHORT).show()
+        viewModel.address.observe(viewLifecycleOwner,Observer{
+//                 Toast.makeText(activity, "lat:"+it.toString(), Toast.LENGTH_SHORT).show()
+            binding.currentCityTv.text = it.subAdminArea
+            Toast.makeText(activity, "getting air quality..", Toast.LENGTH_SHORT).show()
+            viewModel.getAirQuality(it)
         })
+
+        viewModel.airQualityIndex.observe(viewLifecycleOwner,Observer{
+            val text = "AirQuality"+it.toString()
+            binding.airQualityTv.text = text
+        })
+
         //location
         locationUtils = LocationUtils.getInstance(activity as (MainActivity))
 
@@ -84,81 +93,83 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleLocation() {
-        if(locationUtils.checkLocationPermission())
-        {
-            if(locationUtils.checkLocationEnabled())
-            {
-//                CoroutineScope(Dispatchers.IO).launch{ updateGps() }
+        if (locationUtils.checkLocationPermission()) {
+            if (locationUtils.checkLocationEnabled()) {
                 updateGpsSync()
-            }
-            else{
+            } else {
                 Toast.makeText(activity, "Please turn on the location", Toast.LENGTH_SHORT).show()
             }
-        }
-        else{
+        } else {
             locationUtils.requestLocationPermission()
-            //observe and update gps location
-            CoroutineScope(Dispatchers.IO).launch {
-                Log.i("TAG","Updating location in background...")
-                //timeout
-                repeat(20)
-                {
-                    if(locationUtils.isLocationUsable)
-                    {
-//                        updateGps()
-                        updateGpsSync()
-                        return@launch
-                    }
-                    delay(2000L)
-                }
-            }
+//            //observe and update gps location
+//            CoroutineScope(Dispatchers.IO).launch {
+//                Log.i("TAG","Updating location in background...")
+//                //timeout
+//                repeat(20)
+//                {
+//                    if(locationUtils.isLocationUsable)
+//                    {
+////                        updateGps()
+//                        updateGpsSync()
+//                        return@launch
+//                    }
+//                    delay(2000L)
+//                }
+//            }
+//        }
         }
     }
-    suspend fun updateGps(){
+        suspend fun updateGpsAsync() {
 //        withContext(Dispatchers.Main){
 //            Toast.makeText(activity, "Getting Location....", Toast.LENGTH_SHORT).show()
 //        }
-        //location
-        locationUtils.requestCurrentLocation {
-            //update to viewmodel
+            //location
+            locationUtils.requestCurrentLocation {
+                //update to viewmodel
 //            viewModel.location.postValue(it)
-            // ui
+                // ui
+            }
+
         }
 
-    }
-    fun updateGpsSync(){
-
+        fun updateGpsSync() {
             Toast.makeText(activity, "Getting Location....", Toast.LENGTH_SHORT).show()
-        //location
-        locationUtils.requestCurrentLocation {
-            //update to viewmodel
-            viewModel.location.postValue(it)
-            // ui
+            //location
+            locationUtils.requestCurrentLocation {
+                //update to viewmodel
+
+                val address = locationUtils.geoCoderConverter(it.latitude, it.longitude)
+                viewModel.address.postValue(address)
+
+
+                // ui
+            }
         }
 
-    }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode){
-            locationUtils.PERMISSION_ID -> {
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        updateGps()
+        override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
+        ) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            when (requestCode) {
+                locationUtils.PERMISSION_ID -> {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         updateGpsSync()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            "Continuing without location features",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                }
-                else{
-                    Toast.makeText(activity, "Continuing without location features", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        locationUtils.stopRequestingLocation()
     }
-
-
-}
+    }

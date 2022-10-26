@@ -38,6 +38,22 @@ class NetworkModels {
     data class Languages (
         @Json(name="name") val name : String
     )
+
+
+    //air quality
+    @JsonClass(generateAdapter = true)
+    data class AirQualiltyResult (
+        @Json(name="list") val qualityList:List<AirQualiltyContainer>
+    )
+    @JsonClass(generateAdapter = true)
+    data class AirQualiltyContainer (
+        @Json(name="main") val airQualiltyIndexContainer:AirQualityIndexContainer
+    )
+    @JsonClass(generateAdapter = true)
+    data class AirQualityIndexContainer (
+        @Json(name="aqi") val aqi:Int
+    )
+
 }
 //to remove the brackets in string
 //it will throw MalformedJsonException while parsing string to array

@@ -22,6 +22,8 @@ class Repository(private val database:CountryDatabase) {
         it.asDomainModels()
     }
 
+    val airQuality = MutableLiveData<Int>(0)
+
     init {
             refreshList()
     }
@@ -58,6 +60,23 @@ class Repository(private val database:CountryDatabase) {
     {
         return CoroutineScope(Dispatchers.IO).async{
             database.countryDao.getCountry(id).asDomainModel()
+        }
+    }
+    suspend fun getAirQuality(lat:Double,lon:Double)
+    {
+        CoroutineScope(Dispatchers.IO).launch{
+
+            try {
+                Log.i("TAG","inside repos get airqa")
+
+                val weatherResult = Network.weatherApiService.getAirQuality(lat,lon).await()
+                this@Repository.airQuality.postValue(weatherResult.qualityList[0].airQualiltyIndexContainer.aqi)
+                Log.i("TAG",weatherResult.qualityList[0].airQualiltyIndexContainer.aqi.toString())
+            }
+            catch (e:Exception){
+                Log.i("TAG","exception in calling weather api")
+                return@launch
+            }
         }
     }
 }
