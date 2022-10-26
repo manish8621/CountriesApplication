@@ -23,6 +23,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        var searching = false
         binding = FragmentHomeBinding.inflate(inflater,container,false)
 
 
@@ -33,9 +34,7 @@ class HomeFragment : Fragment() {
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        binding.searchBtn.setOnClickListener {
 
-        }
         val recyclerViewAdapter = CountriesViewAdapter().also {
             it.setOnclickListener{ countryItem->
 //                Toast.makeText(activity, countryItem.name, Toast.LENGTH_SHORT).show()
@@ -46,6 +45,7 @@ class HomeFragment : Fragment() {
         //setOnClickListeners
         binding.searchBtn.setOnClickListener {
             viewModel.searchInList(binding.searchEt.text.toString())
+            searching = true
         }
 
         binding.recyclerView.adapter = recyclerViewAdapter
@@ -53,8 +53,17 @@ class HomeFragment : Fragment() {
         //setObservers
         viewModel.countryItemsList.observe(viewLifecycleOwner) {
             if(it.isEmpty()) {
-                Toast.makeText(activity, "no result found", Toast.LENGTH_LONG).show()}
-            recyclerViewAdapter.submitList(it)
+                if (searching) {
+                    Toast.makeText(activity, "no result found", Toast.LENGTH_LONG).show()
+                }
+                searching = false
+            }
+            else
+            {
+                recyclerViewAdapter.submitList(it)
+                viewModel.setLoadingStatus(false)
+            }
+
         }
         return binding.root
     }

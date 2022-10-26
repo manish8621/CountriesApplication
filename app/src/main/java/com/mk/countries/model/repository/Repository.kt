@@ -41,6 +41,10 @@ class Repository(private val database:CountryDatabase) {
         {
             try{
                 val networkResult:List<NetworkModels.CountryItem> = Network.countriesApiService.getCountriesList().await()
+                //clear the old data
+                database.countryDao.deleteAll()
+                database.countryDao.resetId()
+                //insert new data
                 database.countryDao.insertAll(*(networkResult.asDatabaseModels()))
                 refreshList()
             }
@@ -48,6 +52,7 @@ class Repository(private val database:CountryDatabase) {
                 Log.e("TAG",(e.message?:" error "))
             }
         }
+
     }
     fun getCountryItemByIdAsync(id:Long):Deferred<DomainModels.CountryItem>
     {

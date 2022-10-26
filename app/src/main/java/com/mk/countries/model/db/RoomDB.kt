@@ -22,6 +22,8 @@ interface CountryDao{
 
     @Query("DELETE from countries_table")
     fun deleteAll()
+    @Query("DELETE from sqlite_sequence where name = 'countries_table'")
+    fun resetId()
 }
 
 @Database(entities = [CountryItem::class], version = 2, exportSchema = false)

@@ -1,14 +1,11 @@
 package com.mk.countries.model.db
 
-import android.util.Log
 import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mk.countries.model.api.NetworkModels
 import com.mk.countries.model.domain.DomainModels
 
 class DatabaseEntities {

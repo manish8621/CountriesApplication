@@ -17,6 +17,17 @@
         android:paddingEnd="10dp"
         tools:context=".view.fragments.HomeFragment">
 
+        <ImageView
+            android:id="@+id/status_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/loading_animation"
+            app:visiblityStatus="@{viewModel.isLoading}"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toTopOf="@+id/recycler_view"
+            android:contentDescription="@string/loading" />
         <EditText
             android:id="@+id/search_et"
             style="@style/titleText"
