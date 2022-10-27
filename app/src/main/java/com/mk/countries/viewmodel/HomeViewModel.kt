@@ -46,10 +46,9 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun searchInList(filter:String){
-        if(filter.isEmpty()) return
         viewModelScope.launch {
 
-            if(filter.lowercase() == "all")
+            if(filter.isEmpty() || filter.lowercase() == "all")
                 repository.refreshList()
             else
                 repository.filterList(filter)

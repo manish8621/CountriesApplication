@@ -17,23 +17,34 @@
         android:paddingEnd="10dp"
         tools:context=".view.fragments.HomeFragment">
 
+        <SearchView
+            android:id="@+id/search_v"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_rectangle_bg"
+            android:iconifiedByDefault="false"
+            android:queryBackground="@color/transparent"
+            android:queryHint="search"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <EditText
             android:id="@+id/search_et"
             style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginTop="16dp"
             android:autofillHints="all,india"
             android:background="@drawable/edit_text_background"
             android:fontFamily="@font/roboto_mono_medium"
-
             android:hint="@string/search"
+            android:visibility="gone"
             android:inputType="text"
             android:paddingStart="10dp"
             android:paddingTop="5dp"
             android:paddingEnd="10dp"
             android:paddingBottom="5dp"
-            android:text="@string/all"
             app:layout_constraintEnd_toStartOf="@id/search_btn"
             app:layout_constraintStart_toStartOf="@+id/guideline_start"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +56,7 @@
             android:layout_height="0dp"
             android:background="@drawable/btn_bg"
             android:fontFamily="@font/roboto_mono_medium"
-
+            android:visibility="gone"
             android:text="@string/search"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/search_et"
@@ -58,15 +69,15 @@
             android:id="@+id/weatherIv"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="16dp"
             android:background="@drawable/left_round_corner"
             android:contentDescription="@string/weather_image"
             android:padding="10dp"
+            android:layout_marginTop="16dp"
             android:src="@drawable/location"
             app:layout_constraintEnd_toStartOf="@+id/current_city_tv"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/guideline_start"
-            app:layout_constraintTop_toBottomOf="@+id/search_et" />
+            app:layout_constraintTop_toBottomOf="@+id/search_v" />
 
         <TextView
             android:id="@+id/current_city_tv"
