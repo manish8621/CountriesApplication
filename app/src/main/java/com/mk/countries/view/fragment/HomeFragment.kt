@@ -9,9 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.mk.countries.R
 import com.mk.countries.databinding.FragmentHomeBinding
 import com.mk.countries.model.util.LocationUtils
 import com.mk.countries.view.MainActivity
@@ -20,6 +23,7 @@ import com.mk.countries.view.adapter.bindImage
 import com.mk.countries.viewmodel.HomeViewModel
 import com.mk.countries.viewmodel.HomeViewModelFactory
 import kotlinx.coroutines.*
+import java.util.jar.Manifest
 
 
 class HomeFragment : Fragment() {
@@ -28,6 +32,26 @@ class HomeFragment : Fragment() {
     private lateinit var binding:FragmentHomeBinding
     private lateinit var locationUtils: LocationUtils
 
+    private val requestPermissionLauncher by lazy {
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){
+                isGranted ->run {
+            if (isGranted) {
+                Toast.makeText(activity, "OK GRANTED", Toast.LENGTH_SHORT).show()
+                updateGpsSync()
+            }
+            else {
+                Toast.makeText(activity, "Permission not granted", Toast.LENGTH_LONG).show()
+
+            }
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.i("TAG","onCreate")
+        Toast.makeText(activity, "onCreate", Toast.LENGTH_SHORT).show()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,7 +79,10 @@ class HomeFragment : Fragment() {
             viewModel.searchInList(binding.searchEt.text.toString())
             searching = true
         }
-
+        //load location when user clicks weather icon
+        binding.weatherIv.setOnClickListener{
+            handleLocation()
+        }
         binding.recyclerView.adapter = recyclerViewAdapter
 
         //setObservers
@@ -79,22 +106,36 @@ class HomeFragment : Fragment() {
             binding.currentCityTv.text = it.cityName
             binding.airQualityTv.text = text
             bindImage(binding.weatherIv,toIconUrl(it.weatherIcon))
-            Toast.makeText(activity, "weather : $it", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(activity, "weather : ${it.weatherIcon}", Toast.LENGTH_SHORT).show()
         })
 
 
 
         viewModel.location.observe(viewLifecycleOwner){
             it?.let {
-                Toast.makeText(activity, "[OK] Location\n[Load] Weather", Toast.LENGTH_SHORT).show()
-                viewModel.getWeather(it)
+
+                if(viewModel.weather.value==null) {
+                    Toast.makeText(activity, "[OK] Location\n[Load] Weather", Toast.LENGTH_SHORT).show()
+                    //put loading image
+                    binding.weatherIv.setImageResource(R.drawable.loading_animation)
+                    viewModel.getWeather(it)
+                }
             }
         }
 
         //location
         locationUtils = LocationUtils.getInstance((activity as (MainActivity)))
 
-        handleLocation()
+        //permissions
+
+        //handleLocation()
+        //if weather not already loaded
+        if(!viewModel.isWeatherLoaded()) {
+            Toast.makeText(activity, "Weather load started", Toast.LENGTH_SHORT).show()
+            handleLocation()
+            viewModel.weatherLoaded()
+        }
+
         return binding.root
     }
 
@@ -110,23 +151,7 @@ class HomeFragment : Fragment() {
                 Toast.makeText(activity, "Please turn on the location", Toast.LENGTH_SHORT).show()
             }
         } else {
-            locationUtils.requestLocationPermission()
-//            //observe and update gps location
-//            CoroutineScope(Dispatchers.IO).launch {
-//                Log.i("TAG","Updating location in background...")
-//                //timeout
-//                repeat(20)
-//                {
-//                    if(locationUtils.isLocationUsable)
-//                    {
-////                        updateGps()
-//                        updateGpsSync()
-//                        return@launch
-//                    }
-//                    delay(2000L)
-//                }
-//            }
-//        }
+            requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
@@ -136,30 +161,32 @@ class HomeFragment : Fragment() {
             locationUtils.requestCurrentLocation {
                 //update to viewmodel
                 viewModel.location.postValue(it)
+                viewModel.weatherLoaded()
             }
     }
 
 
-        override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
-        ) {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-            when (requestCode) {
-                locationUtils.PERMISSION_ID -> {
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        updateGpsSync()
-                    } else {
-                        Toast.makeText(
-                            activity,
-                            "Continuing without location features",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
+//        override fun onRequestPermissionsResult(
+//            requestCode: Int,
+//            permissions: Array<out String>,
+//            grantResults: IntArray
+//        ) {
+//            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//            when (requestCode) {
+//                locationUtils.PERMISSION_ID -> {
+//                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                        updateGpsSync()
+//                    } else {
+//                        Toast.makeText(
+//                            activity,
+//                            "Continuing without location features",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }
+//        }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -21,12 +21,17 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     var location = MutableLiveData<Location>()
     var address = MutableLiveData<Address>()
     val weather = repository.weather
+    private var weatherLoaded = false
 
     init {
         viewModelScope.launch {
             refreshCountriesList()
         }
 
+    }
+    fun isWeatherLoaded():Boolean = weatherLoaded
+    fun weatherLoaded() {
+        weatherLoaded = true
     }
     //invoked by fragment observe when we get gps location
     fun getWeather(location: Location){

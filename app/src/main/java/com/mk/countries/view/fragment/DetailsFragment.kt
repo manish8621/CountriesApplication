@@ -68,8 +68,9 @@ class DetailsFragment : Fragment() {
         //when we got the address
         viewModel.address.observe(viewLifecycleOwner){
             it?.let{
-                Toast.makeText(activity, it.toString(), Toast.LENGTH_SHORT).show()
-                viewModel.requestWeather(it.latitude, it.longitude)
+                Toast.makeText(activity, it.toString(), Toast.LENGTH_SHORT).show()//put loading image
+                binding.weatherIv.setImageResource(R.drawable.loading_animation)
+//                viewModel.requestWeather(it.latitude, it.longitude)
             }
         }
 

@@ -17,17 +17,6 @@
         android:paddingEnd="10dp"
         tools:context=".view.fragments.HomeFragment">
 
-        <ImageView
-            android:id="@+id/status_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/loading_animation"
-            app:visiblityStatus="@{viewModel.isLoading}"
-            android:visibility="visible"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-            app:layout_constraintStart_toStartOf="@+id/guideline_start"
-            app:layout_constraintTop_toTopOf="@+id/recycler_view"
-            android:contentDescription="@string/loading" />
         <EditText
             android:id="@+id/search_et"
             style="@style/titleText"
@@ -72,7 +61,8 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/left_round_corner"
             android:contentDescription="@string/weather_image"
-            android:src="@drawable/app_icon"
+            android:padding="10dp"
+            android:src="@drawable/location"
             app:layout_constraintEnd_toStartOf="@+id/current_city_tv"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/guideline_start"
@@ -85,7 +75,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:background="#e0e0e0"
-            android:text="[city]"
+            android:text="City"
 
             app:layout_constraintBottom_toBottomOf="@+id/weatherIv"
             app:layout_constraintEnd_toStartOf="@+id/air_quality_tv"
@@ -100,7 +90,7 @@
             android:layout_height="50dp"
             android:background="@drawable/right_round_corner"
             android:gravity="center"
-            android:text="air quality 123 %"
+            android:text="AQI"
             app:layout_constraintBottom_toBottomOf="@+id/current_city_tv"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintHorizontal_bias="0.5"
@@ -134,5 +124,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_end="10dp" />
+
+        <ImageView
+            android:id="@+id/status_iv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="@string/loading"
+            android:src="@drawable/loading_animation"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toTopOf="@+id/recycler_view"
+            app:visiblityStatus="@{viewModel.isLoading}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
