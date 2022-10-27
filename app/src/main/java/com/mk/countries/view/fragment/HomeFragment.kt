@@ -1,23 +1,23 @@
 package com.mk.countries.view.fragment
 
-import android.content.pm.PackageManager
-import android.location.Location
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.mk.countries.BuildConfig
 import com.mk.countries.R
 import com.mk.countries.databinding.FragmentHomeBinding
 import com.mk.countries.model.util.LocationUtils
@@ -26,8 +26,7 @@ import com.mk.countries.view.adapter.CountriesViewAdapter
 import com.mk.countries.view.adapter.bindImage
 import com.mk.countries.viewmodel.HomeViewModel
 import com.mk.countries.viewmodel.HomeViewModelFactory
-import kotlinx.coroutines.*
-import java.util.jar.Manifest
+import kotlin.contracts.contract
 
 
 class HomeFragment : Fragment() {
@@ -35,27 +34,38 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding:FragmentHomeBinding
     private lateinit var locationUtils: LocationUtils
+    private var isSentToSettings = false
 
     private val requestPermissionLauncher by lazy {
         registerForActivityResult(ActivityResultContracts.RequestPermission()){
                 isGranted ->run {
-            if (isGranted) {
-                Toast.makeText(activity, "OK GRANTED", Toast.LENGTH_SHORT).show()
-                updateGpsSync()
-            }
-            else {
-                Toast.makeText(activity, "Permission not granted", Toast.LENGTH_LONG).show()
-
-            }
+                if (isGranted) {
+                    Toast.makeText(activity, "OK GRANTED", Toast.LENGTH_SHORT).show()
+                    updateGpsSync()
+                }
+                else {
+                    Snackbar.make(binding.root,R.string.permission_denied_msg,Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.settings){
+                            isSentToSettings = true
+                            Toast.makeText(activity, "Grant location permission", Toast.LENGTH_SHORT).show()
+                            goToAppInfo()
+                        }
+                        .show()
+                }
             }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.i("TAG","onCreate")
-        Toast.makeText(activity, "onCreate", Toast.LENGTH_SHORT).show()
+    private fun goToAppInfo() {
+        val settingsIntent = Intent()
+        settingsIntent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        val uri = Uri.fromParts("package",BuildConfig.APPLICATION_ID,null)
+        settingsIntent.data =uri
+        settingsIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(settingsIntent)
     }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -110,13 +120,13 @@ class HomeFragment : Fragment() {
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                Toast.makeText(activity, "chag", Toast.LENGTH_SHORT).show()
                     viewModel.searchInList(binding.searchV.query.toString())
                     searching = true
                 return true
             }
 
         })
+        binding.searchV.clearFocus()
         binding.recyclerView.adapter = recyclerViewAdapter
 
         //setObservers
@@ -149,7 +159,7 @@ class HomeFragment : Fragment() {
             it?.let {
 
                 if(viewModel.weather.value==null) {
-                    Toast.makeText(activity, "[OK] Location\n[Load] Weather", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(activity, "[OK] Location\n[Load] Weather", Toast.LENGTH_SHORT).show()
                     //put loading image
                     binding.weatherIv.setImageResource(R.drawable.loading_animation)
 //                    viewModel.getWeather(it)
@@ -163,7 +173,7 @@ class HomeFragment : Fragment() {
         //handleLocation()
         //if weather not already loaded
         if(!viewModel.isWeatherLoaded()) {
-            Toast.makeText(activity, "Weather load started", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(activity, "Weather load started", Toast.LENGTH_SHORT).show()
             handleLocation()
             viewModel.weatherLoaded()
         }
@@ -187,14 +197,26 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /*
+    * gets the location updates ton viewModel
+    * **/
     fun updateGpsSync() {
-            Toast.makeText(activity, "Getting Location....", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(activity, "Getting Location....", Toast.LENGTH_SHORT).show()
             //location
             locationUtils.requestCurrentLocation {
                 //update to viewmodel
                 viewModel.location.postValue(it)
                 viewModel.weatherLoaded()
             }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if(isSentToSettings) {
+            if (locationUtils.isLocationUsable)
+                updateGpsSync()
+            isSentToSettings= false
+        }
     }
 
 
