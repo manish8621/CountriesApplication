@@ -16,4 +16,5 @@
     <string name="time_zone">Time zone</string>
     <string name="independent">Independent</string>
     <string name="loading">loading</string>
+    <string name="city">[city]</string>
 </resources>

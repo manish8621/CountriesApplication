@@ -16,6 +16,7 @@ import com.mk.countries.databinding.FragmentHomeBinding
 import com.mk.countries.model.util.LocationUtils
 import com.mk.countries.view.MainActivity
 import com.mk.countries.view.adapter.CountriesViewAdapter
+import com.mk.countries.view.adapter.bindImage
 import com.mk.countries.viewmodel.HomeViewModel
 import com.mk.countries.viewmodel.HomeViewModelFactory
 import kotlinx.coroutines.*
@@ -45,7 +46,6 @@ class HomeFragment : Fragment() {
 
         val recyclerViewAdapter = CountriesViewAdapter().also {
             it.setOnclickListener{ countryItem->
-//                Toast.makeText(activity, countryItem.name, Toast.LENGTH_SHORT).show()
                 findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(countryItem.id))
             }
         }
@@ -73,23 +73,33 @@ class HomeFragment : Fragment() {
             }
 
         }
-        viewModel.address.observe(viewLifecycleOwner,Observer{
-//                 Toast.makeText(activity, "lat:"+it.toString(), Toast.LENGTH_SHORT).show()
-            binding.currentCityTv.text = it.subAdminArea
-            Toast.makeText(activity, "getting air quality..", Toast.LENGTH_SHORT).show()
-            viewModel.getAirQuality(it)
+
+        viewModel.weather.observe(viewLifecycleOwner,Observer{
+            val text = "AirQualityIndex ${it.aqi} "
+            binding.currentCityTv.text = it.cityName
+            binding.airQualityTv.text = text
+            bindImage(binding.weatherIv,toIconUrl(it.weatherIcon))
+            Toast.makeText(activity, "weather : $it", Toast.LENGTH_SHORT).show()
         })
 
-        viewModel.airQualityIndex.observe(viewLifecycleOwner,Observer{
-            val text = "AirQuality"+it.toString()
-            binding.airQualityTv.text = text
-        })
+
+
+        viewModel.location.observe(viewLifecycleOwner){
+            it?.let {
+                Toast.makeText(activity, "[OK] Location\n[Load] Weather", Toast.LENGTH_SHORT).show()
+                viewModel.getWeather(it)
+            }
+        }
 
         //location
-        locationUtils = LocationUtils.getInstance(activity as (MainActivity))
+        locationUtils = LocationUtils.getInstance((activity as (MainActivity)))
 
         handleLocation()
         return binding.root
+    }
+
+    private fun toIconUrl(weatherIcon: String): String {
+        return "https://www.weatherbit.io/static/img/icons/${weatherIcon}.png"
     }
 
     private fun handleLocation() {
@@ -119,32 +129,15 @@ class HomeFragment : Fragment() {
 //        }
         }
     }
-        suspend fun updateGpsAsync() {
-//        withContext(Dispatchers.Main){
-//            Toast.makeText(activity, "Getting Location....", Toast.LENGTH_SHORT).show()
-//        }
-            //location
-            locationUtils.requestCurrentLocation {
-                //update to viewmodel
-//            viewModel.location.postValue(it)
-                // ui
-            }
 
-        }
-
-        fun updateGpsSync() {
+    fun updateGpsSync() {
             Toast.makeText(activity, "Getting Location....", Toast.LENGTH_SHORT).show()
             //location
             locationUtils.requestCurrentLocation {
                 //update to viewmodel
-
-                val address = locationUtils.geoCoderConverter(it.latitude, it.longitude)
-                viewModel.address.postValue(address)
-
-
-                // ui
+                viewModel.location.postValue(it)
             }
-        }
+    }
 
 
         override fun onRequestPermissionsResult(

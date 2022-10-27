@@ -6,24 +6,21 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
-import com.mk.countries.model.api.Network
-import com.mk.countries.model.api.dataTransferObjects.CountryItem
-import com.mk.countries.model.db.DatabaseEntities
 import com.mk.countries.model.db.getDatabase
 import com.mk.countries.model.repository.Repository
 import kotlinx.coroutines.*
-import retrofit2.HttpException
 
 class HomeViewModel(application: Application): AndroidViewModel(application) {
     val database = getDatabase(application)
     val repository = Repository(database)
 
     val countryItemsList = repository.countries
+    //recycler view
     val isLoading=MutableLiveData(false)
+    var location = MutableLiveData<Location>()
     var address = MutableLiveData<Address>()
-    val airQualityIndex = repository.airQuality
+    val weather = repository.weather
 
     init {
         viewModelScope.launch {
@@ -31,9 +28,14 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         }
 
     }
-    fun getAirQuality(address: Address){
-        CoroutineScope(Dispatchers.IO).launch{ Log.i("TAG","inside viewmodel aqa lat${address.latitude}");repository.getAirQuality(address.latitude, address.longitude) }
+    //invoked by fragment observe when we get gps location
+    fun getWeather(location: Location){
+        CoroutineScope(Dispatchers.IO).launch{
+            Log.i("TAG","inside viewmodel aqa lat${location.latitude}");
+            repository.getWeather(location.latitude, location.longitude)
+        }
     }
+
     fun setLoadingStatus(flag:Boolean){
         isLoading.value = flag
     }
@@ -60,6 +62,10 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         job.invokeOnCompletion {
             isLoading.postValue(false)
         }
+    }
+
+    fun getCoOrdinates(){
+        address.value
     }
 
 }

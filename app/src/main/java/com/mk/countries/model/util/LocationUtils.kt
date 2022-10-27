@@ -44,16 +44,14 @@ class LocationUtils private constructor(private val activity: AppCompatActivity)
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED ||
                     ActivityCompat.checkSelfPermission(
-                        activity,
-                        Manifest.permission.ACCESS_FINE_LOCATION
+                        activity,Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED
             )
 
-    fun checkLocationEnabled(): Boolean {
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+    fun checkLocationEnabled(): Boolean =(
+        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-    }
+            )
 
     /**
      * just requests permission
@@ -73,11 +71,13 @@ class LocationUtils private constructor(private val activity: AppCompatActivity)
                 onSuccess(it)
             }
     }
+
     /**
      * requests for location get location once,
      * send callback as parameter
      *
      * */
+
     fun requestCurrentLocation(onSuccess: (location: Location) -> Unit) {
         isLocationRequsting = true
         locationCallback = object : LocationCallback() {
@@ -148,6 +148,7 @@ class LocationUtils private constructor(private val activity: AppCompatActivity)
         }
         return address
     }
+
     companion object{
         private lateinit var INSTANCE:LocationUtils
         fun getInstance(_activity:AppCompatActivity):LocationUtils{

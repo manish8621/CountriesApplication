@@ -2,6 +2,7 @@ package com.mk.countries.model.api
 
 import android.util.Log
 import com.mk.countries.model.db.DatabaseEntities
+import com.mk.countries.model.domain.DomainModels
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -42,18 +43,50 @@ class NetworkModels {
 
     //air quality
     @JsonClass(generateAdapter = true)
-    data class AirQualiltyResult (
-        @Json(name="list") val qualityList:List<AirQualiltyContainer>
+    data class AirQualityResult (
+        @Json(name="list") val list : List<AirQualiltyList>
     )
     @JsonClass(generateAdapter = true)
-    data class AirQualiltyContainer (
-        @Json(name="main") val airQualiltyIndexContainer:AirQualityIndexContainer
-    )
-    @JsonClass(generateAdapter = true)
-    data class AirQualityIndexContainer (
-        @Json(name="aqi") val aqi:Int
-    )
+    data class AirQualiltyList (
 
+        @Json(name="main") val airQualityIndexContainer : AirQualityIndexContainer,
+    )
+    data class  AirQualityIndexContainer(
+        @Json(name = "aqi") val aqi : Int
+    )
+    //weather
+//    @JsonClass(generateAdapter = true)
+//    data class WeatherResult (
+//        @Json(name="weather") val WeatherList : List<Weather>,
+//        @Json(name="main") val tempContainer : TempContainer,
+//        @Json(name="name") val locationName : String
+//    )
+//    @JsonClass(generateAdapter = true)
+//    data class Weather (
+//        @Json(name="main")val description:String,
+//        @Json(name = "icon") val icon:String
+//    )
+//    @JsonClass(generateAdapter = true)
+//    data class TempContainer (
+//        @Json(name="temp") val temp : Double,
+//        @Json(name="feels_like") val feelsLike : Double
+//    )
+    @JsonClass(generateAdapter = true)
+    data class WeatherResult(
+        @Json(name = "data") val dataList:List<Data>
+    )
+    @JsonClass(generateAdapter = true)
+    data class Data(
+        @Json(name = "weather") val weather:Weather,
+        @Json(name = "aqi") val aqi:Int,
+        @Json(name = "city_name") val cityName:String,
+        @Json(name = "temp") val temperature:Double
+    )
+    @JsonClass(generateAdapter = true)
+    data class Weather(
+        @Json(name="icon") val icon :String,
+        @Json(name="description") var description:String
+    )
 }
 //to remove the brackets in string
 //it will throw MalformedJsonException while parsing string to array
@@ -80,4 +113,15 @@ fun List<NetworkModels.CountryItem>.asDatabaseModels():Array<DatabaseEntities.Co
             independent = it.independent
         )
     }.toTypedArray()
+}
+
+fun NetworkModels.WeatherResult.asDomainModel():DomainModels.Weather{
+    val data = this.dataList[0]
+    return DomainModels.Weather(
+        cityName = data.cityName,
+        temp=data.temperature,
+        weatherDesc = data.weather.description,
+        weatherIcon = data.weather.icon,
+        aqi = data.aqi
+    )
 }

@@ -16,7 +16,7 @@
         tools:context=".view.fragments.HomeFragment">
         <!--weather-->
         <ImageView
-            android:id="@+id/weather"
+            android:id="@+id/weatherIv"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="16dp"
@@ -36,13 +36,13 @@
             android:layout_height="50dp"
             android:background="#e0e0e0"
             android:gravity="center"
-            android:text="Mumbai"
+            android:text="@string/city"
 
-            app:layout_constraintBottom_toBottomOf="@+id/weather"
+            app:layout_constraintBottom_toBottomOf="@+id/weatherIv"
             app:layout_constraintEnd_toStartOf="@+id/air_quality_tv"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/weather"
-            app:layout_constraintTop_toTopOf="@+id/weather" />
+            app:layout_constraintStart_toEndOf="@+id/weatherIv"
+            app:layout_constraintTop_toTopOf="@+id/weatherIv" />
 
         <TextView
             android:id="@+id/air_quality_tv"

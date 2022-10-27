@@ -11,10 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mk.countries.R
 import com.mk.countries.databinding.FragmentDetailsBinding
+import com.mk.countries.model.util.LocationUtils
+import com.mk.countries.view.MainActivity
 import com.mk.countries.view.adapter.bindImage
 import com.mk.countries.viewmodel.DetailsViewModel
 import com.mk.countries.viewmodel.DetailsViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+lateinit var locationUtils: LocationUtils
 class DetailsFragment : Fragment() {
     private lateinit var binding:FragmentDetailsBinding
     private lateinit var viewModel:DetailsViewModel
@@ -33,13 +39,54 @@ class DetailsFragment : Fragment() {
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
+        //observer
+
+        //when we got country detail get the co ordinate
         viewModel.countryDetails.observe(viewLifecycleOwner,Observer{
-            Toast.makeText(activity, it?.toString()?:"v v", Toast.LENGTH_SHORT).show()
-            if(it.flag.isNotEmpty())
-                bindImage(binding.countryFlagIv,it.flag)
+            it?.let{
+                Toast.makeText(activity, it.toString() , Toast.LENGTH_SHORT).show()
+                if (it.flag.isNotEmpty()) {
+                    bindImage(binding.countryFlagIv, it.flag)
+
+                }
+                if (it.capital == "no-capital") {
+                    val noCapital = true
+                } else {
+                    //get co ordinates
+//                    CoroutineScope(Dispatchers.IO){
+//
+//                    }
+//                    viewModel.address.value = (locationUtils.geoCoderConverter(it.capital))
+//                    Toast.makeText(activity, "co "+(viewModel.address.value?:"null").toString(), Toast.LENGTH_SHORT).show()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        viewModel.address.postValue(locationUtils.geoCoderConverter(it.capital))
+                    }
+                }
+            }
         })
-        Toast.makeText(activity, args.id.toString(), Toast.LENGTH_SHORT).show()
+        //when we got the address
+        viewModel.address.observe(viewLifecycleOwner){
+            it?.let{
+                Toast.makeText(activity, it.toString(), Toast.LENGTH_SHORT).show()
+                viewModel.requestWeather(it.latitude, it.longitude)
+            }
+        }
+
+        //when we got the weather
+        viewModel.weather.observe(viewLifecycleOwner){
+            it?.let{
+                Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
+                binding.airQualityTv.text = "AQI:${it.aqi}"
+                binding.currentCityTv.text = it.cityName
+                bindImage(binding.weatherIv, toIconUrl(it.weatherIcon))
+            }
+        }
+
+        locationUtils =LocationUtils.getInstance((activity as MainActivity))
         return binding.root
     }
-
+    private fun toIconUrl(weatherIcon: String): String {
+        return "https://www.weatherbit.io/static/img/icons/${weatherIcon}.png"
+    }
 }

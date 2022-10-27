@@ -1,5 +1,7 @@
 package com.mk.countries.model.domain
 
+import com.mk.countries.model.api.NetworkModels
+
 
 class DomainModels {
     data class CountryItem (
@@ -15,5 +17,12 @@ class DomainModels {
         val languages : String,
         val flag : String,
         val independent : String
+    )
+    data class Weather(
+        val cityName:String,
+        val temp:Double,
+        val weatherDesc:String ,
+        val weatherIcon:String,
+        val aqi:Int
     )
 }
