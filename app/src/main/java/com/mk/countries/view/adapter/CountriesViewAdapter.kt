@@ -1,6 +1,7 @@
 package com.mk.countries.view.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,18 +12,18 @@ import com.mk.countries.model.domain.DomainModels.*
 class CountriesViewAdapter:ListAdapter<CountryItem,CountriesViewAdapter.ItemViewHolder>(DiffUtilCallBack()){
 
     //lambda
-    private var clickListener:((countryItem:CountryItem)->Unit)? = null
+    private var clickListener:((view: View, countryItem:CountryItem)->Unit)? = null
 
     //viewHolder
     class ItemViewHolder private constructor(private val binding:CountryListItemBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(countryItem:CountryItem,clickListener:((countryItem:CountryItem)->Unit)?)
+        fun bind(countryItem:CountryItem,clickListener:((view: View, countryItem:CountryItem)->Unit)?)
         {
             binding.countryItem = countryItem
 
             //if clicklistener is not null
             clickListener?.let {
                 binding.root.setOnClickListener{
-                        clickListener.invoke(countryItem)
+                        clickListener.invoke(binding.countryFlagIv,countryItem)
                 }
             }
 
@@ -39,7 +40,7 @@ class CountriesViewAdapter:ListAdapter<CountryItem,CountriesViewAdapter.ItemView
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.bind(getItem(position),clickListener)
 
-    fun setOnclickListener(clickListener:((countryItem:CountryItem)->Unit)){
+    fun setOnclickListener(clickListener:((view: View, countryItem:CountryItem)->Unit)){
         this.clickListener = clickListener
     }
 }

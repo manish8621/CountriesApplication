@@ -1,6 +1,7 @@
 package com.mk.countries.view.fragment
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,20 @@ class DetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDetailsBinding.inflate(inflater,container,false)
+
+        //shared view
+        val animation = TransitionInflater.from(requireContext()).inflateTransition(
+            android.R.transition.explode
+        ).also {
+            it.duration = 2000L
+            it.startDelay=2000L
+        }
+
+//        sharedElementEnterTransition = animation
+//        sharedElementReturnTransition = animation.also {
+//            it.duration=2000L
+//        }
+
         //safearg
         val args:DetailsFragmentArgs by navArgs()
         val application = requireActivity().application
@@ -45,7 +60,7 @@ class DetailsFragment : Fragment() {
         //when we got country detail get the co ordinate
         viewModel.countryDetails.observe(viewLifecycleOwner,Observer{
             it?.let{
-                Toast.makeText(activity, it.toString() , Toast.LENGTH_SHORT).show()
+//                Toast.makeText(activity, it.toString() , Toast.LENGTH_SHORT).show()
                 if (it.flag.isNotEmpty()) {
                     bindImage(binding.countryFlagIv, it.flag)
 
@@ -53,12 +68,6 @@ class DetailsFragment : Fragment() {
                 if (it.capital == "no-capital") {
                     val noCapital = true
                 } else {
-                    //get co ordinates
-//                    CoroutineScope(Dispatchers.IO){
-//
-//                    }
-//                    viewModel.address.value = (locationUtils.geoCoderConverter(it.capital))
-//                    Toast.makeText(activity, "co "+(viewModel.address.value?:"null").toString(), Toast.LENGTH_SHORT).show()
                     CoroutineScope(Dispatchers.IO).launch {
                         viewModel.address.postValue(locationUtils.geoCoderConverter(it.capital))
                     }
@@ -68,16 +77,16 @@ class DetailsFragment : Fragment() {
         //when we got the address
         viewModel.address.observe(viewLifecycleOwner){
             it?.let{
-                Toast.makeText(activity, it.toString(), Toast.LENGTH_SHORT).show()//put loading image
+//                Toast.makeText(activity, it.toString(), Toast.LENGTH_SHORT).show()//put loading image
                 binding.weatherIv.setImageResource(R.drawable.loading_animation)
-//                viewModel.requestWeather(it.latitude, it.longitude)
+                viewModel.requestWeather(it.latitude, it.longitude)
             }
         }
 
         //when we got the weather
         viewModel.weather.observe(viewLifecycleOwner){
             it?.let{
-                Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
+//                Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
                 binding.airQualityTv.text = "AQI:${it.aqi}"
                 binding.currentCityTv.text = it.cityName
                 bindImage(binding.weatherIv, toIconUrl(it.weatherIcon))

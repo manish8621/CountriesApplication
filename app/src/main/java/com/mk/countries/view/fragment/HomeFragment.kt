@@ -3,6 +3,7 @@ package com.mk.countries.view.fragment
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -13,8 +14,10 @@ import android.view.ViewGroup
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintSet.Layout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.mk.countries.BuildConfig
@@ -83,36 +86,21 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         val recyclerViewAdapter = CountriesViewAdapter().also {
-            it.setOnclickListener{ countryItem->
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(countryItem.id))
+            it.setOnclickListener{ view,countryItem->
+                val extras = FragmentNavigatorExtras(view to "flagOnScreen2")
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(countryItem.id)
+                    ,extras)
             }
         }
 
         //setOnClickListeners
-        binding.searchBtn.setOnClickListener {
-            viewModel.searchInList(binding.searchEt.text.toString())
-            searching = true
-        }
-        //et
-//        binding.searchEt.addTextChangedListener(object:TextWatcher{
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                viewModel.searchInList(s.toString())
-//                searching = true
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//
-//            }
-//
-//        })
+
         //load location when user clicks weather icon
         binding.weatherIv.setOnClickListener{
             handleLocation()
         }
+
+        //search input listener
         binding.searchV.setOnQueryTextListener(object:OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.searchInList(binding.searchV.query.toString())
@@ -126,6 +114,7 @@ class HomeFragment : Fragment() {
             }
 
         })
+        //clear edit text focus on start
         binding.searchV.clearFocus()
         binding.recyclerView.adapter = recyclerViewAdapter
 
@@ -150,7 +139,6 @@ class HomeFragment : Fragment() {
             binding.currentCityTv.text = it.cityName
             binding.airQualityTv.text = text
             bindImage(binding.weatherIv,toIconUrl(it.weatherIcon))
-//            Toast.makeText(activity, "weather : ${it.weatherIcon}", Toast.LENGTH_SHORT).show()
         })
 
 
@@ -162,7 +150,7 @@ class HomeFragment : Fragment() {
 //                    Toast.makeText(activity, "[OK] Location\n[Load] Weather", Toast.LENGTH_SHORT).show()
                     //put loading image
                     binding.weatherIv.setImageResource(R.drawable.loading_animation)
-//                    viewModel.getWeather(it)
+                    viewModel.getWeather(it)
                 }
             }
         }
@@ -171,7 +159,7 @@ class HomeFragment : Fragment() {
         locationUtils = LocationUtils.getInstance((activity as (MainActivity)))
 
         //handleLocation()
-        //if weather not already loaded
+        //if weather not already loaded then dont do it again
         if(!viewModel.isWeatherLoaded()) {
 //            Toast.makeText(activity, "Weather load started", Toast.LENGTH_SHORT).show()
             handleLocation()
@@ -193,12 +181,18 @@ class HomeFragment : Fragment() {
                 Toast.makeText(activity, "Please turn on the location", Toast.LENGTH_SHORT).show()
             }
         } else {
-            requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            requestLocationPermission()
         }
     }
 
+    private fun requestLocationPermission() {
+        //min sdk is 23 so no need to check
+        //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    }
+
     /*
-    * gets the location updates ton viewModel
+    * location updates to viewModel
     * **/
     fun updateGpsSync() {
 //            Toast.makeText(activity, "Getting Location....", Toast.LENGTH_SHORT).show()
@@ -220,8 +214,12 @@ class HomeFragment : Fragment() {
     }
 
 
-
+    override fun onDestroy() {
+        Toast.makeText(activity, "onDestroy", Toast.LENGTH_SHORT).show()
+        super.onDestroy()
+    }
     override fun onDestroyView() {
+        Toast.makeText(activity, "onDestroyView", Toast.LENGTH_SHORT).show()
         super.onDestroyView()
         locationUtils.stopRequestingLocation()
     }
