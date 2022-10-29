@@ -15,7 +15,7 @@ import retrofit2.HttpException
 import java.util.*
 
 class Repository(private val database:CountryDatabase) {
-    private val _countries = MutableLiveData<List<DatabaseEntities.CountryItem>>()
+    private val  _countries = MutableLiveData<List<DatabaseEntities.CountryItem>>()
     val countries:LiveData<List<DomainModels.CountryItem>> = Transformations.map(_countries){
         it.asDomainModels()
     }
@@ -61,7 +61,7 @@ class Repository(private val database:CountryDatabase) {
         }
     }
 
-    suspend fun getWeather(lat:Double,lon:Double)
+    suspend fun updateWeather(lat:Double,lon:Double)
     {
         CoroutineScope(Dispatchers.IO).launch{
 
@@ -81,8 +81,8 @@ class Repository(private val database:CountryDatabase) {
             }
         }
     }
-    suspend fun getWeather1(lat:Double,lon:Double):DomainModels.Weather? = withContext(Dispatchers.IO){
-        var weather :DomainModels.Weather? = null
+    suspend fun getWeatherFromApi(lat:Double,lon:Double):DomainModels.Weather? = withContext(Dispatchers.IO){
+            var weather :DomainModels.Weather? = null
             try {
                 Log.i("TAG","inside repos get weather")
 

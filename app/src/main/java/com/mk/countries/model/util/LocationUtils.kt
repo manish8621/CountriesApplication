@@ -25,7 +25,7 @@ class LocationUtils private constructor(private val activity: AppCompatActivity)
     private var fusedLocationProviderClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(activity)
 
-    private var locationRequest: LocationRequest = LocationRequest.Builder(LocationRequest.PRIORITY_HIGH_ACCURACY,
+    private var locationRequest: LocationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,
         REQUEST_INTERVEL).build()
     var isLocationRequsting = false
     lateinit var locationCallback : LocationCallback
@@ -158,9 +158,9 @@ class LocationUtils private constructor(private val activity: AppCompatActivity)
             }
             return INSTANCE
         }
+        //do i have to clear this
     }
 }
-
 
 /**
  * simple but throws exception when app is minimized

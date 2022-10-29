@@ -72,6 +72,7 @@
             android:layout_height="50dp"
             android:background="@drawable/left_round_corner"
             android:contentDescription="@string/weather_image"
+            android:transitionName="weather1"
             android:padding="10dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/location"
@@ -88,6 +89,7 @@
             android:gravity="center"
             android:background="#e0e0e0"
             android:text="City"
+            android:transitionName="city1"
 
             app:layout_constraintBottom_toBottomOf="@+id/weatherIv"
             app:layout_constraintEnd_toStartOf="@+id/air_quality_tv"
@@ -103,6 +105,8 @@
             android:background="@drawable/right_round_corner"
             android:gravity="center"
             android:text="AQI"
+
+            android:transitionName="aqi1"
             app:layout_constraintBottom_toBottomOf="@+id/current_city_tv"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintHorizontal_bias="0.5"
@@ -147,6 +151,6 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_start"
             app:layout_constraintTop_toTopOf="@+id/recycler_view"
-            app:visiblityStatus="@{viewModel.isLoading}" />
+            app:visiblityStatus="@{viewModel.isListLoading}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

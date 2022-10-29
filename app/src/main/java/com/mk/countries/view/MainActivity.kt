@@ -18,14 +18,11 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         setContentView(R.layout.activity_main)
 
-        if(!checkInternet())
-        {
-            Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show()
-        }
-
+//        if(!checkInternet())
+//            Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show()
     }
 
-    private fun checkInternet(): Boolean {
+    fun checkInternet(): Boolean {
         val conManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = conManager.activeNetworkInfo
         return activeNetwork!=null && activeNetwork.isConnected

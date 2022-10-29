@@ -55,22 +55,6 @@ class NetworkModels {
         @Json(name = "aqi") val aqi : Int
     )
     //weather
-//    @JsonClass(generateAdapter = true)
-//    data class WeatherResult (
-//        @Json(name="weather") val WeatherList : List<Weather>,
-//        @Json(name="main") val tempContainer : TempContainer,
-//        @Json(name="name") val locationName : String
-//    )
-//    @JsonClass(generateAdapter = true)
-//    data class Weather (
-//        @Json(name="main")val description:String,
-//        @Json(name = "icon") val icon:String
-//    )
-//    @JsonClass(generateAdapter = true)
-//    data class TempContainer (
-//        @Json(name="temp") val temp : Double,
-//        @Json(name="feels_like") val feelsLike : Double
-//    )
     @JsonClass(generateAdapter = true)
     data class WeatherResult(
         @Json(name = "data") val dataList:List<Data>

@@ -24,6 +24,7 @@
             android:layout_marginTop="16dp"
             android:padding="10dp"
             android:background="@drawable/left_round_corner"
+            android:transitionName="weather2"
             android:contentDescription="@string/weather_image"
             android:src="@drawable/refresh"
             app:layout_constraintEnd_toStartOf="@+id/current_city_tv"
@@ -35,6 +36,7 @@
         <TextView
             android:id="@+id/current_city_tv"
             style="@style/titleText"
+            android:transitionName="city2"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="#e0e0e0"
@@ -55,6 +57,7 @@
             android:background="@drawable/right_round_corner"
             android:gravity="center"
             android:text="AQI"
+            android:transitionName="aqi2"
             app:layout_constraintBottom_toBottomOf="@+id/current_city_tv"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintHorizontal_bias="0.5"
@@ -64,8 +67,8 @@
 
         <ImageView
             android:id="@+id/country_flag_iv"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
             android:transitionName="flagOnScreen2"
             android:layout_marginTop="64dp"
             app:layout_constraintEnd_toEndOf="parent"

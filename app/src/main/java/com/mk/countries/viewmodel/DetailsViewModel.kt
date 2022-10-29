@@ -10,7 +10,6 @@ import com.mk.countries.model.db.getDatabase
 import com.mk.countries.model.domain.DomainModels
 import com.mk.countries.model.domain.DomainModels.CountryItem
 import com.mk.countries.model.repository.Repository
-import com.mk.countries.view.fragment.locationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,10 +35,8 @@ class DetailsViewModel(id: Long,application: Application): AndroidViewModel(appl
     }
     fun requestWeather(lat:Double,lon:Double){
         CoroutineScope(Dispatchers.IO).launch {
-            weather.postValue(repository.getWeather1(lat,lon))
+            weather.postValue(repository.getWeatherFromApi(lat,lon))
         }
     }
-    fun updateAddress(address: Address){
 
-    }
 }

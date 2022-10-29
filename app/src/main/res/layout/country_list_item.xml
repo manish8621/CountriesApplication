@@ -27,7 +27,6 @@
                 android:layout_width="150dp"
                 android:layout_height="100dp"
                 app:imageUrl="@{countryItem.flag}"
-                android:transitionName="flagOnScreen1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.409"
                 app:layout_constraintStart_toStartOf="parent"
