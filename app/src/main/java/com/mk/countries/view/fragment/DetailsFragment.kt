@@ -13,7 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.mk.countries.R
 import com.mk.countries.databinding.FragmentDetailsBinding
 import com.mk.countries.model.util.LocationUtils
-import com.mk.countries.model.util.NetUtils
+import com.mk.countries.model.util.isConnectedToInternet
 import com.mk.countries.view.MainActivity
 import com.mk.countries.view.adapter.bindImage
 import com.mk.countries.viewmodel.DetailsViewModel
@@ -26,7 +26,6 @@ class DetailsFragment : Fragment() {
     private lateinit var binding:FragmentDetailsBinding
     private lateinit var viewModel:DetailsViewModel
     private lateinit var locationUtils: LocationUtils
-    private lateinit var netUtils: NetUtils
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +35,6 @@ class DetailsFragment : Fragment() {
 
         //location,net
         locationUtils =LocationUtils.getInstance((activity as MainActivity))
-        netUtils = NetUtils(requireContext())
 
         //shared view
         val animation = TransitionInflater.from(requireContext()).inflateTransition(
@@ -60,7 +58,8 @@ class DetailsFragment : Fragment() {
         //onClickListener
         binding.weatherIv.setOnClickListener{
                 viewModel.countryDetails.value?.let {
-                loadWeather(it.capital)
+                if(viewModel.weather.value==null)
+                    loadWeather(it.capital)
             }
         }
         //observer
@@ -83,9 +82,12 @@ class DetailsFragment : Fragment() {
         //when we got the weather
         viewModel.weather.observe(viewLifecycleOwner){
             it?.let{
-                val text = "AQI:${it.aqi}"
-                binding.airQualityTv.text = text
-                binding.currentCityTv.text = it.cityName
+                val aqiText = "AQI ${it.aqi} "
+                val tempText = "${it.temp}°C"
+                binding.cityTv.text = it.cityName
+                binding.aqiTv.text = aqiText
+                binding.tempTv.text = tempText
+                binding.weatherTv.text = it.weatherDesc
                 bindImage(binding.weatherIv, toIconUrl(it.weatherIcon))
             }
         }
@@ -105,7 +107,7 @@ class DetailsFragment : Fragment() {
             Toast.makeText(activity, "No capital for this country", Toast.LENGTH_SHORT).show()
             //load with co ordinates
         }
-        else if(netUtils.isConnectedToInternet().not())
+        else if(isConnectedToInternet(requireContext()).not())
             Toast.makeText(activity, "No internet", Toast.LENGTH_SHORT).show()
         else {
             setWeatherUiLoading()
@@ -117,5 +119,6 @@ class DetailsFragment : Fragment() {
             viewModel.address.postValue(locationUtils.geoCoderConverter(city))
         }
     }
+
 
 }

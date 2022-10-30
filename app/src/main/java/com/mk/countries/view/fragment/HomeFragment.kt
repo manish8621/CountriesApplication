@@ -20,7 +20,7 @@ import com.mk.countries.BuildConfig
 import com.mk.countries.R
 import com.mk.countries.databinding.FragmentHomeBinding
 import com.mk.countries.model.util.LocationUtils
-import com.mk.countries.model.util.NetUtils
+import com.mk.countries.model.util.isConnectedToInternet
 import com.mk.countries.view.MainActivity
 import com.mk.countries.view.adapter.CountriesViewAdapter
 import com.mk.countries.view.adapter.bindImage
@@ -34,7 +34,6 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding:FragmentHomeBinding
     private lateinit var locationUtils: LocationUtils
-    private lateinit var netUtils: NetUtils
 
     //to know if user returned from settings page after granting permission
     private var isSentToSettings = false
@@ -45,7 +44,6 @@ class HomeFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()){
                 isGranted ->run {
                 if (isGranted) {
-                    Toast.makeText(activity, "OK GRANTED", Toast.LENGTH_SHORT).show()
                     handleLocation()
                 }
                 else {
@@ -76,7 +74,6 @@ class HomeFragment : Fragment() {
 
         //location
         locationUtils = LocationUtils.getInstance((activity as (MainActivity)))
-        netUtils = NetUtils(requireContext())
 
         //factory,view model
         val factory = HomeViewModelFactory(requireActivity().application)
@@ -87,9 +84,7 @@ class HomeFragment : Fragment() {
         val recyclerViewAdapter = CountriesViewAdapter().also {
             it.setOnclickListener{ imageView,countryItem->
                 val extras = FragmentNavigatorExtras(imageView to "flagOnScreen2"
-                    ,binding.weatherIv to "weather2"
-                    ,binding.currentCityTv to "city2"
-                    ,binding.airQualityTv to "aqi2")
+                    )
                 findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(countryItem.id)
                     ,extras)
             }
@@ -99,7 +94,8 @@ class HomeFragment : Fragment() {
 
         //load location when user clicks weather icon
         binding.weatherIv.setOnClickListener{
-            handleLocation()
+            if(viewModel.weather.value==null)
+                handleLocation()
         }
 
         //search input listener
@@ -143,15 +139,18 @@ class HomeFragment : Fragment() {
 //                    Toast.makeText(activity, "[OK] Location\n[Load] Weather", Toast.LENGTH_SHORT).show()
                     //put loading image
 //                    setWeatherUiLoading()
-//                    viewModel.updateWeather(it)
+                    viewModel.updateWeather(it)
                 }
             }
         }
 
         viewModel.weather.observe(viewLifecycleOwner,Observer{
-            val text = "AQI ${it.aqi} "
-            binding.currentCityTv.text = it.cityName
-            binding.airQualityTv.text = text
+            val aqiText = "AQI ${it.aqi} "
+            val tempText = "${it.temp}°C"
+            binding.cityTv.text = it.cityName
+            binding.aqiTv.text = aqiText
+            binding.tempTv.text = tempText
+            binding.weatherTv.text = it.weatherDesc
             bindImage(binding.weatherIv,toIconUrl(it.weatherIcon))
         })
 
@@ -170,13 +169,18 @@ class HomeFragment : Fragment() {
 }
 
     private fun handleLocation() {
-            if (netUtils.isConnectedToInternet()) {
+        try{
+            if (isConnectedToInternet(requireContext())) {
                 if (locationUtils.checkLocationPermission()) {
                     if (locationUtils.checkLocationEnabled()) {
                         updateGpsSync()
                     } else {
-                        Snackbar.make(binding.root,R.string.turn_location_on_msg,Snackbar.LENGTH_SHORT)
-                            .setAction(R.string.turn_on){
+                        Snackbar.make(
+                            binding.root,
+                            R.string.turn_location_on_msg,
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .setAction(R.string.turn_on) {
                                 isSentToSettings = true
                                 goToLocationSettings()
                             }
@@ -184,9 +188,13 @@ class HomeFragment : Fragment() {
                     }
                 } else
                     requestLocationPermission()
-            }
-            else
+            } else
                 Toast.makeText(activity, "No internet", Toast.LENGTH_SHORT).show()
+        }
+        catch(e:Exception)
+        {
+            Toast.makeText(activity, "Error while connecting to api !\n"+e.message, Toast.LENGTH_SHORT).show()
+        }
     }
     private fun goToAppInfo() {
         val settingsIntent = Intent()
@@ -235,8 +243,13 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        Toast.makeText(activity, "onDestroyView", Toast.LENGTH_SHORT).show()
         super.onDestroyView()
         locationUtils.stopRequestingLocation()
     }
+//expecting error
+    override fun onDestroy() {
+        super.onDestroy()
+        if(::locationUtils.isInitialized)
+                LocationUtils.destroyInstance()
     }
+}

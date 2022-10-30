@@ -4,8 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 
-class NetUtils (private val context: Context) {
-    fun isConnectedToInternet(): Boolean {
+    fun isConnectedToInternet(context: Context): Boolean {
         var flag = false
         val connectivity =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -14,4 +13,3 @@ class NetUtils (private val context: Context) {
         }
         return flag
     }
-}

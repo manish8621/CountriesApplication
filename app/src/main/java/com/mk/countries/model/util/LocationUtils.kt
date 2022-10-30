@@ -11,6 +11,7 @@ import android.util.Log
 import com.google.android.gms.location.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import java.util.Objects
 
 private const val REQUEST_INTERVEL = 500L
 
@@ -150,15 +151,18 @@ class LocationUtils private constructor(private val activity: AppCompatActivity)
     }
 
     companion object{
-        private lateinit var INSTANCE:LocationUtils
+        private var INSTANCE:LocationUtils? = null
         fun getInstance(_activity:AppCompatActivity):LocationUtils{
-            if (!(::INSTANCE.isInitialized))
+            if (INSTANCE==null)
             {
                 INSTANCE = LocationUtils(_activity)
             }
-            return INSTANCE
+            return INSTANCE as LocationUtils
         }
         //do i have to clear this
+        fun destroyInstance(){
+            INSTANCE = null
+        }
     }
 }
 

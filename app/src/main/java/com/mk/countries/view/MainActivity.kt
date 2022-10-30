@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.mk.countries.R
 import com.mk.countries.model.util.LocationUtils
 
@@ -18,13 +20,8 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         setContentView(R.layout.activity_main)
 
-//        if(!checkInternet())
-//            Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show()
     }
 
-    fun checkInternet(): Boolean {
-        val conManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = conManager.activeNetworkInfo
-        return activeNetwork!=null && activeNetwork.isConnected
-    }
+
+
 }

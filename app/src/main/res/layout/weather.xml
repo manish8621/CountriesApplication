@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.cardview.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="10dp"
+        app:cardCornerRadius="20dp"
+        >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="25dp">
+
+        <ImageView
+            android:id="@+id/weather_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/app_icon" />
+
+        <TextView
+            android:id="@+id/weather_tv"
+            style="@style/lightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/black"
+            android:text="Weather"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/weather_iv"
+            app:layout_constraintTop_toBottomOf="@+id/weather_iv"
+            tools:text="Heavy Rain" />
+
+        <TextView
+            android:id="@+id/city_tv"
+            style="@style/lightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="city"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/weather_tv"
+            app:layout_constraintTop_toBottomOf="@+id/weather_tv"
+            tools:text="Mumbai" />
+
+        <TextView
+            android:id="@+id/temp_tv"
+            style="@style/lightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="29"
+            android:text="29 °"
+            android:textColor="@color/black"
+            android:textSize="50sp"
+            android:fontFamily="@font/poppins_bold"
+            app:layout_constraintEnd_toStartOf="@id/temp_metric_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/temp_metric_tv"
+            style="@style/lightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="°"
+            android:text="°"
+            android:textSize="25sp"
+            android:fontFamily="@font/poppins_bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/feels_like_tv"
+            style="@style/lightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feels like __°"
+            tools:text="Feels like 30°"
+            app:layout_constraintStart_toStartOf="@+id/temp_tv"
+            app:layout_constraintTop_toBottomOf="@+id/temp_tv" />
+
+        <TextView
+            android:id="@+id/aqi_tv"
+            style="@style/lightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="AQI °"
+            app:layout_constraintStart_toStartOf="@+id/feels_like_tv"
+            app:layout_constraintTop_toBottomOf="@+id/feels_like_tv"
+            tools:text="aqi 121" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
