@@ -13,9 +13,7 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         setContentView(R.layout.activity_main)
     }
-    fun requestLocationPermission(requestPermissionLauncher:ActivityResultLauncher<String>){
-        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-    }
+
 
 
 }

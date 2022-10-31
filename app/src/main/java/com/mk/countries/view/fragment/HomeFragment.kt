@@ -252,7 +252,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun requestLocationPermission() {
-        (activity as MainActivity).requestLocationPermission(requestPermissionLauncher)
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
     //Location related
