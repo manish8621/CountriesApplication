@@ -60,7 +60,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     }
 
     //refreshes the repository
-    private suspend fun refreshCountriesList()
+    fun refreshCountriesList()
     {
         isListLoading.postValue(true)
             val job = CoroutineScope(Dispatchers.IO).launch{

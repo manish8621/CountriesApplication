@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -56,10 +57,12 @@ class HomeFragment : Fragment() {
     private lateinit var locationCallback : LocationCallback
 
     private var locationRequest: LocationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,REQUEST_INTERVEL).build()
+    private lateinit var requestPermissionLauncher:ActivityResultLauncher<String>
 
-    private val requestPermissionLauncher by lazy {
-        registerForActivityResult(ActivityResultContracts.RequestPermission()){
-                isGranted ->run {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestPermissionLauncher  =registerForActivityResult(ActivityResultContracts.RequestPermission()){
+                    isGranted ->run {
                 if (isGranted) {
                     handleLocation()
                 }
@@ -74,11 +77,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         locationManager = (requireActivity() as MainActivity).getSystemService(Context.LOCATION_SERVICE) as LocationManager
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient((requireActivity() as MainActivity))
     }
@@ -107,6 +105,17 @@ class HomeFragment : Fragment() {
         }
 
         //setOnClickListeners
+
+        //refresh button
+        binding.refreshIb.setOnClickListener{
+            if(isConnectedToInternet(requireContext())) {
+                viewModel.setLoadingStatus(true)
+                viewModel.refreshCountriesList()
+                hideRefreshBtn()
+            }
+            else
+                Toast.makeText(activity, "No internet", Toast.LENGTH_SHORT).show()
+        }
 
         //load location when user clicks weather icon
         binding.weatherIv.setOnClickListener{
@@ -138,11 +147,17 @@ class HomeFragment : Fragment() {
                 if (searching) {
                     Toast.makeText(activity, "no result found", Toast.LENGTH_LONG).show()
                     recyclerViewAdapter.submitList(it)
+                    searching = false
                 }
-                searching = false
+                else if (!isConnectedToInternet(requireContext()))
+                {
+                    showRefreshBtn()
+                    Toast.makeText(activity, "No internet\nclick refresh after getting internet", Toast.LENGTH_SHORT).show()
+                }
             }
             else
             {
+                hideRefreshBtn()
                 recyclerViewAdapter.submitList(it)
                 viewModel.setLoadingStatus(false)
             }
@@ -170,9 +185,11 @@ class HomeFragment : Fragment() {
             handleLocation()
             viewModel.weatherLoadRequested() //change this name
         }
+
     }
 
-
+    private fun showRefreshBtn(){binding.refreshIb.visibility = View.VISIBLE}
+    private fun hideRefreshBtn(){binding.refreshIb.visibility = View.GONE}
     private fun toIconUrl(weatherIcon: String): String {
         return "https://www.weatherbit.io/static/img/icons/${weatherIcon}.png"
     }
