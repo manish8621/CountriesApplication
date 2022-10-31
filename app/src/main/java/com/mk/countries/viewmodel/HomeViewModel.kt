@@ -18,16 +18,11 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     val countryItemsList = repository.countries
 
+    //check if weather load requested at first time after opening app
+    private var weatherLoadRequested = false
 
-    //internet status
-    private val _internetStatus = MutableLiveData(false)
-    val internetStatus :LiveData<Boolean>
-    get() = _internetStatus
-
-    private var weatherLoaded = false
-    //recycler view
+    //to track if recycler view list is loaded
     val isListLoading=MutableLiveData(false)
-
     var location = MutableLiveData<Location>()
     var address = MutableLiveData<Address>()
     val weather = repository.weather // replace with empty live data
@@ -37,20 +32,14 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             refreshCountriesList()
         }
     }
-    fun isWeatherLoaded():Boolean = weatherLoaded
-    fun weatherLoaded() {
-        weatherLoaded = true
+
+    fun isWeatherLoadRequested():Boolean = weatherLoadRequested
+    fun weatherLoadRequested() {
+        weatherLoadRequested = true
     }
-    fun changeInternetStatus(status:Boolean)
-    {
-        _internetStatus.value = status
-    }
+
     //invoked by fragment observe when we get gps location
     fun updateWeather(location: Location){
-//        CoroutineScope(Dispatchers.IO).launch{
-//            Log.i("TAG","inside viewmodel aqa lat${location.latitude}");
-//            repository.updateWeather(location.latitude, location.longitude)
-//        }
         CoroutineScope(Dispatchers.IO).launch {
             weather.postValue(repository.getWeatherFromApi(location.latitude,location.longitude))
         }
@@ -70,7 +59,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    //by default show all countries without filter
+    //refreshes the repository
     private suspend fun refreshCountriesList()
     {
         isListLoading.postValue(true)
@@ -81,10 +70,6 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         job.invokeOnCompletion {
             isListLoading.postValue(false)
         }
-    }
-
-    fun getCoOrdinates(){
-        address.value
     }
 
 }

@@ -1,7 +1,10 @@
 package com.mk.countries.view.fragment
 
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mk.countries.R
 import com.mk.countries.databinding.FragmentDetailsBinding
-import com.mk.countries.model.util.LocationUtils
-import com.mk.countries.model.util.isConnectedToInternet
+import com.mk.countries.util.isConnectedToInternet
 import com.mk.countries.view.MainActivity
 import com.mk.countries.view.adapter.bindImage
 import com.mk.countries.viewmodel.DetailsViewModel
@@ -25,16 +27,12 @@ import kotlinx.coroutines.launch
 class DetailsFragment : Fragment() {
     private lateinit var binding:FragmentDetailsBinding
     private lateinit var viewModel:DetailsViewModel
-    private lateinit var locationUtils: LocationUtils
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDetailsBinding.inflate(inflater,container,false)
-
-        //location,net
-        locationUtils =LocationUtils.getInstance((activity as MainActivity))
 
         //shared view
         val animation = TransitionInflater.from(requireContext()).inflateTransition(
@@ -62,8 +60,8 @@ class DetailsFragment : Fragment() {
                     loadWeather(it.capital)
             }
         }
-        //observer
 
+        //observer
         //when we got country detail get the co ordinate
         viewModel.countryDetails.observe(viewLifecycleOwner,Observer{
             it?.let{
@@ -102,10 +100,25 @@ class DetailsFragment : Fragment() {
     private fun toIconUrl(weatherIcon: String): String {
         return "https://www.weatherbit.io/static/img/icons/${weatherIcon}.png"
     }
+
+    //Location
+    fun geoCoderConverter(city:String): Address?{
+        val geocoder = Geocoder(activity as MainActivity)
+        var address: Address?=null
+        try {
+            address = geocoder.getFromLocationName(city,1).get(0)
+        }
+        catch (e:Exception)
+        {
+            Log.i("TAG",e.message.toString())
+        }
+        return address
+    }
+
     private fun loadWeather(capital:String) {
         if (capital == "no-capital") {
             Toast.makeText(activity, "No capital for this country", Toast.LENGTH_SHORT).show()
-            //load with co ordinates
+            //try load with co ordinates
         }
         else if(isConnectedToInternet(requireContext()).not())
             Toast.makeText(activity, "No internet", Toast.LENGTH_SHORT).show()
@@ -116,7 +129,7 @@ class DetailsFragment : Fragment() {
     }
     private fun requestCoOrdinates(city:String){
         CoroutineScope(Dispatchers.IO).launch {
-            viewModel.address.postValue(locationUtils.geoCoderConverter(city))
+            viewModel.address.postValue(geoCoderConverter(city))
         }
     }
 
