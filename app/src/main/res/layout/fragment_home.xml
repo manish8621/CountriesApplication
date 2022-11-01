@@ -146,6 +146,7 @@
             android:contentDescription="@string/loading"
             android:src="@drawable/loading_animation"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_start"
             app:layout_constraintTop_toTopOf="@+id/recycler_view"
