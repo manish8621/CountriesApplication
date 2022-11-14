@@ -5,26 +5,33 @@ import android.location.Address
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
-import com.mk.countries.model.db.getDatabase
+import com.mk.countries.model.db.CountryDatabase.Companion.getDatabase
+import com.mk.countries.model.db.asDomainModels
 import com.mk.countries.model.repository.Repository
 import kotlinx.coroutines.*
 
 class HomeViewModel(application: Application): AndroidViewModel(application) {
     val database = getDatabase(application)
-    val repository = Repository(database)
+    private val repository = Repository(database)
 
-    val countryItemsList = repository.countries
+    val countryItemsList = Transformations.map(repository.countries){ it.asDomainModels() }
 
     //check if weather load requested at first time after opening app
     private var weatherLoadRequested = false
 
+    //to know if user returned from settings page after granting permission
+    var isSentToSettings = false
+    //to track if searching operation in progress
+    var searching = false
+
+
+
     //to track if recycler view list is loaded
     val isListLoading=MutableLiveData(false)
     var location = MutableLiveData<Location>()
-    var address = MutableLiveData<Address>()
     val weather = repository.weather // replace with empty live data
 
     init {
@@ -51,11 +58,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     fun searchInList(filter:String){
         viewModelScope.launch {
-
-            if(filter.isEmpty() || filter.lowercase() == "all")
-                repository.refreshList()
-            else
-                repository.filterList(filter)
+            repository.search(filter)
         }
     }
 
@@ -65,7 +68,6 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         isListLoading.postValue(true)
             val job = CoroutineScope(Dispatchers.IO).launch{
                 repository.refreshRepository()
-                Log.i("TAG","inside search")
             }
         job.invokeOnCompletion {
             isListLoading.postValue(false)

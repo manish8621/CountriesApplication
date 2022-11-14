@@ -8,14 +8,11 @@ import com.mk.countries.model.db.DatabaseEntities.*
 
 @Dao
 interface CountryDao{
-    @Query("SELECT * FROM countries_table")
-    fun getCountriesList(): List<DatabaseEntities.CountryItem>
-
     @Query("SELECT * FROM countries_table where id = :id")
     fun getCountry(id:Long): DatabaseEntities.CountryItem
 
     @Query("SELECT * FROM countries_table where name like '%' || :country || '%' ")
-    fun search(country:String): List<DatabaseEntities.CountryItem>
+    fun getCountriesList(country:String): LiveData<List<DatabaseEntities.CountryItem>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg countryItem: CountryItem)
@@ -31,19 +28,21 @@ interface CountryDao{
 abstract class CountryDatabase:RoomDatabase()
 {
     abstract val countryDao:CountryDao
-}
+    companion object{
+        private lateinit var INSTANCE:CountryDatabase
 
-private lateinit var INSTANCE:CountryDatabase
-
-fun getDatabase(context: Context):CountryDatabase{
-
-        if (!(::INSTANCE.isInitialized)){
-            INSTANCE = Room.databaseBuilder(
-                context,
-                CountryDatabase::class.java,
-                "country_database"
-            ).fallbackToDestructiveMigration().build()
+        fun getDatabase(context: Context):CountryDatabase{
+            synchronized(this){
+                if (!(::INSTANCE.isInitialized)) {
+                    INSTANCE = Room.databaseBuilder(
+                        context,
+                        CountryDatabase::class.java,
+                        "country_database"
+                    ).fallbackToDestructiveMigration().build()
+                }
+                return INSTANCE
+            }
         }
-        return INSTANCE
-
+    }
 }
+

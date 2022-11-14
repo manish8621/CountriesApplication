@@ -43,10 +43,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding:FragmentHomeBinding
 
 
-    //to know if user returned from settings page after granting permission
-    private var isSentToSettings = false
-    //to track if searching operation in progress
-    var searching = false
+
 
 
     //Location related
@@ -57,19 +54,21 @@ class HomeFragment : Fragment() {
     private lateinit var locationCallback : LocationCallback
 
     private var locationRequest: LocationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,REQUEST_INTERVEL).build()
+
     private lateinit var requestPermissionLauncher:ActivityResultLauncher<String>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissionLauncher  =registerForActivityResult(ActivityResultContracts.RequestPermission()){
-                    isGranted ->run {
+        requestPermissionLauncher  = registerForActivityResult(ActivityResultContracts.RequestPermission()){
+                    isGranted -> run {
                 if (isGranted) {
                     handleLocation()
                 }
                 else {
                     Snackbar.make(binding.root,R.string.permission_denied_msg,Snackbar.LENGTH_SHORT)
                         .setAction(R.string.grant){
-                            isSentToSettings = true
+                            viewModel.isSentToSettings = true
                             Toast.makeText(activity, "Grant location permission", Toast.LENGTH_SHORT).show()
                             goToAppInfo()
                         }
@@ -94,6 +93,8 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this,factory)[HomeViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        //clear edit text focus on start
+        binding.searchV.clearFocus()
 
         val recyclerViewAdapter = CountriesViewAdapter().also {
             it.setOnclickListener{ imageView,countryItem->
@@ -127,27 +128,25 @@ class HomeFragment : Fragment() {
         binding.searchV.setOnQueryTextListener(object:OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.searchInList(binding.searchV.query.toString())
-                searching = true
+                viewModel.searching = true
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
                     viewModel.searchInList(binding.searchV.query.toString())
-                    searching = true
+                    viewModel.searching = true
                 return true
             }
         })
 
-        //clear edit text focus on start
-        binding.searchV.clearFocus()
         binding.recyclerView.adapter = recyclerViewAdapter
 
         //setObservers
         viewModel.countryItemsList.observe(viewLifecycleOwner) {
             if(it.isEmpty()) {
-                if (searching) {
+                if (viewModel.searching) {
                     Toast.makeText(activity, "no result found", Toast.LENGTH_LONG).show()
                     recyclerViewAdapter.submitList(it)
-                    searching = false
+                    viewModel.searching = false
                 }
                 else if (!isConnectedToInternet(requireContext()))
                 {
@@ -210,7 +209,7 @@ class HomeFragment : Fragment() {
                             Snackbar.LENGTH_SHORT
                         )
                             .setAction(R.string.turn_on) {
-                                isSentToSettings = true
+                                viewModel.isSentToSettings = true
                                 goToLocationSettings()
                             }
                             .show()
@@ -255,6 +254,9 @@ class HomeFragment : Fragment() {
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+    }
     //Location related
     fun checkLocationPermission(): Boolean = (
             ActivityCompat.checkSelfPermission(
@@ -277,6 +279,7 @@ class HomeFragment : Fragment() {
                     onSuccess(result.locations[0])
                     stopRequestingLocation()
                 }
+
             }
         }
         if(checkLocationPermission() && checkLocationEnabled())
@@ -291,10 +294,11 @@ class HomeFragment : Fragment() {
     //if user returned from settings page check permission
     override fun onStart() {
         super.onStart()
-        if(isSentToSettings) {
+        if(viewModel.isSentToSettings) {
             if (checkLocationPermission()&&checkLocationEnabled())
                 updateGpsSync()
-            isSentToSettings= false
+            //TODO:replace with handleLocation()
+            viewModel.isSentToSettings= false
         }
     }
 

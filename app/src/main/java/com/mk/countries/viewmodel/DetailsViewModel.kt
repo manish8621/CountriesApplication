@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mk.countries.model.db.getDatabase
+import com.mk.countries.model.db.CountryDatabase.Companion.getDatabase
 import com.mk.countries.model.domain.DomainModels
 import com.mk.countries.model.domain.DomainModels.CountryItem
 import com.mk.countries.model.repository.Repository

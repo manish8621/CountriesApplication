@@ -15,26 +15,13 @@ import retrofit2.HttpException
 import java.util.*
 
 class Repository(private val database:CountryDatabase) {
-    private val  _countries = MutableLiveData<List<DatabaseEntities.CountryItem>>()
-    val countries:LiveData<List<DomainModels.CountryItem>> = Transformations.map(_countries){
-        it.asDomainModels()
-    }
+    private val searchQuery = MutableLiveData("")
+    val countries = Transformations.switchMap(searchQuery){ database.countryDao.getCountriesList(it) }
 
     val weather = MutableLiveData<DomainModels.Weather>()
 
-    init {
-            refreshList()
-    }
-
-    fun refreshList(){
-        CoroutineScope(Dispatchers.IO).launch {
-            _countries.postValue(database.countryDao.getCountriesList())
-        }
-    }
-    fun filterList(filter:String){
-        CoroutineScope(Dispatchers.IO).launch {
-            _countries.postValue(database.countryDao.search(filter))
-        }
+    fun search(searchQuery:String){
+        this.searchQuery.value = searchQuery
     }
     suspend fun refreshRepository(){
         withContext(Dispatchers.IO)
@@ -46,7 +33,6 @@ class Repository(private val database:CountryDatabase) {
                 database.countryDao.resetId()
                 //insert new data
                 database.countryDao.insertAll(*(networkResult.asDatabaseModels()))
-                refreshList()
             }
             catch (e:Exception){
                 Log.e("TAG",(e.message?:" error "))
@@ -61,26 +47,7 @@ class Repository(private val database:CountryDatabase) {
         }
     }
 
-    suspend fun updateWeather(lat:Double,lon:Double)
-    {
-        CoroutineScope(Dispatchers.IO).launch{
 
-            try {
-                Log.i("TAG","inside repos get weather")
-
-                val weatherResult = Network.weatherApiService.getWeather(lat,lon, API_KEY_WEATHERBIT).await()
-
-                this@Repository.weather.postValue(weatherResult.asDomainModel())
-
-                Log.i("TAG","aqi:"+weatherResult.dataList[0].aqi.toString())
-            }
-            catch (e:Exception){
-//                this@Repository.airQuality.postValue(2)
-                Log.i("TAG","exception in calling weather api ${e.message}")
-                return@launch
-            }
-        }
-    }
     suspend fun getWeatherFromApi(lat:Double,lon:Double):DomainModels.Weather? = withContext(Dispatchers.IO){
             var weather :DomainModels.Weather? = null
             try {
@@ -91,7 +58,6 @@ class Repository(private val database:CountryDatabase) {
                 weather = (weatherResult.asDomainModel())
             }
             catch (e:Exception){
-//                this@Repository.airQuality.postValue(2)
                 Log.i("TAG","exception in calling weather api ${e.message}")
             }
         return@withContext weather
